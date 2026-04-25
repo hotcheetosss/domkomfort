@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Мадина Каиржановна",
+    "role": "Основатель и визионер",
+    "expertise": "Стратегия · SMM · Личный бренд",
+    "topics": "Маркетинг, личный бренд, масштабирование, партнёрства",
+    "img": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "name": "Ирина Кайзер",
+    "role": "Заместитель директора · Юрист",
+    "expertise": "Юридическое сопровождение · Ипотека",
+    "topics": "Сложные сделки, документы, правовой аудит",
+    "img": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "name": "Дадахан Мажитов",
+    "role": "РОП · Система продаж",
+    "expertise": "Операционное управление · Сделки",
+    "topics": "Объекты, эксклюзив, скрипты, KPI агентов",
+    "img": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "name": "Алибек Альжанов",
+    "role": "РОП · Стратегия и рост",
+    "expertise": "Развитие · Обучение",
+    "topics": "Найм, адаптация, рост команды, аналитика",
+    "img": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "name": "Жансулу",
+    "role": "HR · Администрирование",
+    "expertise": "Подбор · Процессы",
+    "topics": "Трудоустройство, адаптация, внутренний сервис",
+    "img": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "name": "Айбек Алимхан",
+    "role": "Менеджер Krisha Агент",
+    "expertise": "Krisha.kz · Верификация",
+    "topics": "Продвижение объектов, ТОП размещения, call-center",
+    "img": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80"
+  }
+]

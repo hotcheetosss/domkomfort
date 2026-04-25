@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== АГЕНТЫ =====
+// ===== ПОЛЬЗОВАТЕЛИ (сотрудники) =====
+model User {
+  id          Int      @id @default(autoincrement())
+  phone       String   @unique                     // "77085050826" — номер для входа
+  password    String                                // bcrypt-хэш, не открытый пароль
+  name        String                                // отображаемое имя
+  role        String   @default("agent")           // agent / admin
+  active      Boolean  @default(true)              // можно заблокировать аккаунт
+  lastLoginAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Связь: один user ↔ один agent-профиль (опционально — у админа может не быть профиля)
+  agent       Agent?
+
+  @@map("users")
+}
+model Agent {
+  id              String   @id                       // "a1", "a2" — совместимо с текущими данными
+  name            String
+  role            String
+  specialization  String
+  listings        Int      @default(0)               // количество активных объектов
+  phone           String
+  img             String?                            // URL фото агента
+  awards          String[] @default([])              // массив наград: ["ТОП-7 Krisha 2024"]
+  userId          Int?     @unique                 // ← НОВОЕ
+  user            User?    @relation(fields: [userId], references: [id])   // ← НОВОЕ
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Связи
+  properties      Property[]                          // один агент — много объектов
+  leads           Lead[]                              // один агент — много заявок
+
+  @@map("agents")                                    // имя таблицы в БД
+}
+
+// ===== РУКОВОДИТЕЛИ =====
+model Leadership {
+  id         Int      @id @default(autoincrement())
+  name       String
+  role       String
+  expertise  String
+  topics     String
+  img        String?
+  sortOrder  Int      @default(0)                    // порядок вывода на странице
+  createdAt  DateTime @default(now())
+
+  @@map("leadership")
+}
+
+// ===== ОБЪЕКТЫ =====
+model Property {
+  id             String   @id                        // "p1", "p2"
+  title          String
+  type           String                              // Квартира / Новостройка / Дом / Коммерция
+  deal           String                              // sale / rent
+  price          BigInt                              // цена в тенге без пробелов (93400000)
+  priceLabel     String                              // отображаемая: "93 400 000"
+  district       String
+  address        String
+  sqm            Float                               // 112 или 28.5
+  rooms          Int      @default(0)                // 0 для коммерции
+  floor          Int?                                // может отсутствовать (для коттеджей)
+  totalFloors    Int
+  year           Int
+  ceilingHeight  Float?
+  bathroom       String?                             // "2 с/у"
+  condition      String?                             // "Авторский ремонт"
+  parking        String?
+  balcony        String?
+  description    String                              // длинное описание
+  features       String[] @default([])               // ["Панорамный вид", "Мебель в подарок"]
+  gallery        String[] @default([])               // URL-ы фото
+  top            Boolean  @default(false)            // TOP Krisha метка
+  active         Boolean  @default(true)             // снят с продажи или нет
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Связи
+  agentId        String
+  agent          Agent    @relation(fields: [agentId], references: [id])
+  leads          Lead[]
+
+  @@index([type])
+  @@index([deal])
+  @@index([district])
+  @@index([price])
+  @@index([rooms])
+  @@map("properties")
+}
+
+// ===== ЗАЯВКИ =====
+model Lead {
+  id          Int      @id @default(autoincrement())
+  name        String
+  phone       String
+  message     String?
+  source      String   @default("website")
+  status      String   @default("new")        // new / in_progress / viewing / closed / rejected
+  notes       String?                          // внутренние заметки агента
+  ip          String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt              // ← НОВОЕ: обновляется автоматически при изменении
+
+  propertyId  String?
+  property    Property? @relation(fields: [propertyId], references: [id])
+  agentId     String?
+  agent       Agent?    @relation(fields: [agentId], references: [id])
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([agentId])                           // ← для быстрого фильтра «заявки агента»
+  @@map("leads")
+}

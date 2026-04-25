@@ -1,0 +1,102 @@
+/* Базовые стили админки */
+
+.admin-page {
+  transition: opacity 0.2s ease;
+}
+
+.admin-page.hidden {
+  display: none;
+}
+
+/* Пункт меню в sidebar */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+  transition: all 0.15s ease;
+}
+
+.nav-item:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Если юзер не админ — скрыть admin-only пункты */
+body[data-role="agent"] .admin-only {
+  display: none;
+}
+
+/* Карточка в content area */
+.admin-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid rgb(229, 231, 235);
+  padding: 24px;
+}
+
+/* Стат-карточка */
+.stat-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid rgb(229, 231, 235);
+  padding: 20px 24px;
+}
+
+.stat-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(107, 114, 128);
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 600;
+  color: rgb(31, 41, 55);
+  margin-top: 8px;
+  line-height: 1;
+}
+/* Form sections */
+.form-section-title {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgb(107, 114, 128);
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgb(229, 231, 235);
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgb(55, 65, 81);
+  margin-bottom: 6px;
+}
+
+.form-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid rgb(209, 213, 219);
+  accent-color: #216140;
+  cursor: pointer;
+}
+
+textarea.admin-input {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.5;
+}

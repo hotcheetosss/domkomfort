@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Дом Комфорт — Агентство недвижимости №1 в Астане</title>
+<meta name="description" content="Дом Комфорт — премиальное агентство недвижимости в Астане. Продаём быстрее, безопаснее, с гарантированным результатом. Официальные партнёры Krisha.kz." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['"Cormorant Garamond"', 'serif'],
+          sans: ['Manrope', 'sans-serif'],
+        },
+        colors: {
+          primary: {
+            50: '#F1F7F3', 100: '#E1EFE6', 200: '#C3DFCD', 300: '#9CC9AB',
+            400: '#7BBF9E', 500: '#3E9569', 600: '#2D7B53', 700: '#216140',
+            800: '#1B4D32', 900: '#164432',
+          },
+          cream: '#F6F3EE',
+          ivory: '#FAF8F4',
+          graphite: '#222222',
+          gold: '#C9A96A',
+        }
+      }
+    }
+  }
+</script>
+
+<link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body class="antialiased">
+
+</head>
+<body class="antialiased">
+
+<!-- ========== HEADER ========== -->
+<header id="header" class="fixed top-0 left-0 right-0 z-40 transition-all duration-500">
+  <div class="backdrop-blur-md bg-ivory/80 border-b border-primary-900/5">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10 flex items-center justify-between h-20">
+      <!-- Logo -->
+      <a href="#" onclick="navigate('home'); return false;" class="flex items-center gap-3 group">
+        <svg class="logo-svg" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Dom Komfort logo - building shape -->
+          <path d="M18 45 L18 25 L30 15 L30 45 Z" stroke="#164432" stroke-width="2.5" fill="none"/>
+          <path d="M30 45 L30 22 L42 30 L42 45 Z" stroke="#164432" stroke-width="2.5" fill="none"/>
+          <path d="M14 45 L18 45 L18 32 Z" fill="#3E9569"/>
+          <path d="M42 45 L46 45 L46 35 Z" fill="#3E9569"/>
+          <path d="M36 28 L36 45" stroke="#3E9569" stroke-width="2" fill="none"/>
+        </svg>
+        <div class="flex flex-col leading-tight">
+          <span class="font-display text-2xl text-primary-700 font-semibold tracking-tight">Дом Комфорт</span>
+          <span class="text-[10px] uppercase tracking-[0.25em] text-graphite/60 font-medium">агентство недвижимости</span>
+        </div>
+      </a>
+
+      <!-- Nav -->
+      <nav class="hidden lg:flex items-center gap-8">
+        <a href="#" onclick="navigate('home'); return false;" class="nav-link" data-page="home">Главная</a>
+        <a href="#" onclick="navigate('home','about'); return false;" class="nav-link">О компании</a>
+        <a href="#" onclick="navigate('agents'); return false;" class="nav-link" data-page="agents">Агенты</a>
+        <a href="#" onclick="navigate('properties'); return false;" class="nav-link" data-page="properties">Объекты</a>
+        <a href="#" onclick="navigate('home','services'); return false;" class="nav-link">Услуги</a>
+        <a href="#" onclick="navigate('join'); return false;" class="nav-link" data-page="join">Карьера</a>
+        <a href="#" onclick="navigate('home','contacts'); return false;" class="nav-link">Контакты</a>
+      </nav>
+
+      <!-- CTAs -->
+      <div class="hidden lg:flex items-center gap-3">
+        <a href="https://wa.me/77085050826" target="_blank" class="flex items-center gap-2 text-sm text-graphite hover:text-primary-700 transition">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.966-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          +7 708 505 08 26
+        </a>
+        <a href="#" onclick="navigate('home','contacts'); return false;" class="btn-primary">Оставить заявку</a>
+      </div>
+
+      <!-- Mobile burger -->
+      <button onclick="toggleMenu()" class="lg:hidden p-2">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile menu -->
+<div id="mobileMenu" class="mobile-menu lg:hidden">
+  <div class="p-6 flex items-center justify-between border-b border-primary-900/10">
+    <span class="font-display text-2xl text-primary-700 font-semibold">Дом Комфорт</span>
+    <button onclick="toggleMenu()" class="p-2">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M6 18L18 6"/></svg>
+    </button>
+  </div>
+  <nav class="flex flex-col p-6 gap-1">
+    <a href="#" onclick="navigate('home'); toggleMenu(); return false;" class="py-4 font-display text-3xl text-graphite border-b border-primary-900/5">Главная</a>
+    <a href="#" onclick="navigate('home','about'); toggleMenu(); return false;" class="py-4 font-display text-3xl text-graphite border-b border-primary-900/5">О компании</a>
+    <a href="#" onclick="navigate('agents'); toggleMenu(); return false;" class="py-4 font-display text-3xl text-graphite border-b border-primary-900/5">Агенты</a>
+    <a href="#" onclick="navigate('properties'); toggleMenu(); return false;" class="py-4 font-display text-3xl text-graphite border-b border-primary-900/5">Объекты</a>
+    <a href="#" onclick="navigate('home','services'); toggleMenu(); return false;" class="py-4 font-display text-3xl text-graphite border-b border-primary-900/5">Услуги</a>
+    <a href="#" onclick="navigate('join'); toggleMenu(); return false;" class="py-4 font-display text-3xl text-graphite border-b border-primary-900/5">Карьера</a>
+    <a href="#" onclick="navigate('home','contacts'); toggleMenu(); return false;" class="py-4 font-display text-3xl text-graphite">Контакты</a>
+    <a href="https://wa.me/77085050826" target="_blank" class="btn-wa mt-6 justify-center">WhatsApp</a>
+  </nav>
+</div>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/77085050826" target="_blank" class="wa-float">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.966-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- =================================================================== -->
+<!-- ============================ HOME PAGE ============================ -->
+<!-- =================================================================== -->
+<main id="page-home" class="page active">
+
+  <!-- HERO -->
+  <section class="relative min-h-screen flex items-center hero-bg">
+    <div class="absolute inset-0 hero-overlay"></div>
+    <div class="absolute inset-0 grain"></div>
+
+    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-10 pt-32 pb-20 w-full">
+      <div class="max-w-3xl">
+        <div class="flex items-center gap-3 mb-8 fade-up">
+          <span class="w-12 h-[1px] bg-white/50"></span>
+          <span class="text-white/80 uppercase tracking-[0.3em] text-xs font-medium">Астана · с 2021</span>
+        </div>
+
+        <h1 class="font-display text-white text-[clamp(3rem,7vw,6.5rem)] leading-[0.95] font-light mb-8 fade-up" style="transition-delay: 0.1s">
+          Команда,<br>
+          <span class="italic text-primary-200">которая делает</span><br>
+          <span class="font-medium">сделки.</span>
+        </h1>
+
+        <p class="text-white/80 text-lg lg:text-xl font-light max-w-xl leading-relaxed mb-12 fade-up" style="transition-delay: 0.2s">
+          Ваш надёжный центр недвижимости и ипотеки в Астане.
+          Продаём быстрее, безопаснее и с гарантированным результатом.
+        </p>
+
+        <div class="flex flex-wrap gap-4 mb-20 fade-up" style="transition-delay: 0.3s">
+          <a href="#" onclick="navigate('home','contacts'); return false;" class="btn-primary" style="background:#fff;color:#164432">
+            Оставить заявку
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          <a href="https://wa.me/77085050826" target="_blank" class="btn-ghost" style="color:#fff;border-color:rgba(255,255,255,0.35)">
+            Написать в WhatsApp
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.966-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+          </a>
+        </div>
+
+        <!-- Hero stats -->
+        <div class="grid grid-cols-3 gap-6 lg:gap-12 max-w-2xl fade-up" style="transition-delay: 0.4s">
+          <div>
+            <div class="font-display text-white text-4xl lg:text-6xl font-light leading-none mb-2">1 826<span class="text-primary-200">+</span></div>
+            <div class="text-white/60 text-xs uppercase tracking-[0.2em]">Сделок</div>
+          </div>
+          <div>
+            <div class="font-display text-white text-4xl lg:text-6xl font-light leading-none mb-2">298</div>
+            <div class="text-white/60 text-xs uppercase tracking-[0.2em]">Объектов</div>
+          </div>
+          <div>
+            <div class="font-display text-white text-4xl lg:text-6xl font-light leading-none mb-2 italic">TOP<span class="text-primary-200">·</span>7</div>
+            <div class="text-white/60 text-xs uppercase tracking-[0.2em]">Krisha.kz</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/60 text-xs uppercase tracking-[0.3em] flex flex-col items-center gap-3">
+      <span>Scroll</span>
+      <span class="w-[1px] h-8 bg-white/40 animate-pulse"></span>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="py-24 lg:py-40 bg-ivory relative">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <!-- Image -->
+        <div class="relative fade-up">
+          <div class="relative overflow-hidden rounded-lg">
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80" alt="Офис Дом Комфорт" class="w-full aspect-[4/5] object-cover"/>
+          </div>
+          <!-- Floating stat card -->
+          <div class="absolute -bottom-8 -right-4 lg:-right-12 bg-white p-6 lg:p-8 rounded-lg shadow-card max-w-[240px]">
+            <div class="font-display text-primary-700 text-5xl lg:text-6xl font-light leading-none mb-2">4<span class="text-primary-400 italic">+</span></div>
+            <div class="text-graphite/70 text-sm leading-tight">года на рынке недвижимости Астаны</div>
+          </div>
+          <!-- Decorative -->
+          <div class="absolute -top-6 -left-6 w-32 h-32 border border-primary-400/30 rounded-full pointer-events-none"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="fade-up" style="transition-delay: 0.15s">
+          <div class="section-label">О Компании</div>
+          <h2 class="font-display text-5xl lg:text-6xl text-primary-900 leading-[1.05] font-light mb-8">
+            Дорогой сервис.<br>
+            <span class="italic text-primary-600">Честные сделки.</span>
+          </h2>
+          <p class="text-lg text-graphite/70 font-light leading-relaxed mb-6">
+            «Дом Комфорт» — это больше, чем агентство недвижимости.
+            Это система продаж, в которой каждый отвечает за результат.
+            Мы работаем с эксклюзивными договорами, ведём сделку от первого звонка до получения вами денег.
+          </p>
+          <p class="text-lg text-graphite/70 font-light leading-relaxed mb-10">
+            Полный цикл услуг: от подбора до оформления. Экспертная команда, технологии Krisha.kz,
+            юридическая безопасность сделок.
+          </p>
+
+          <div class="grid grid-cols-2 gap-6 mb-10">
+            <div class="border-l border-primary-400/30 pl-6">
+              <div class="font-display text-3xl text-primary-700 font-medium mb-1">Полный цикл</div>
+              <div class="text-sm text-graphite/60">от подбора до оформления</div>
+            </div>
+            <div class="border-l border-primary-400/30 pl-6">
+              <div class="font-display text-3xl text-primary-700 font-medium mb-1">Эксперты</div>
+              <div class="text-sm text-graphite/60">высокая квалификация команды</div>
+            </div>
+          </div>
+
+          <a href="#" onclick="navigate('home','services'); return false;" class="fancy-link font-medium text-primary-700 inline-flex items-center gap-2">
+            Узнать об услугах
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUMBERS / STATS (big block) -->
+  <section class="py-24 lg:py-40 bg-cream relative overflow-hidden">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <div class="text-center mb-20 fade-up">
+        <div class="elegant-divider max-w-md mx-auto mb-6">Цифры говорят</div>
+        <h2 class="font-display text-5xl lg:text-7xl text-primary-900 font-light leading-[1.05]">
+          Команда, которая <span class="italic text-primary-600">превращает</span><br>
+          цифры в результат.
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4">
+        <div class="text-center fade-up">
+          <div class="stat-number text-[clamp(4rem,9vw,8rem)]">1826<span class="text-primary-400">+</span></div>
+          <div class="elegant-divider max-w-[160px] mx-auto my-3">·</div>
+          <div class="text-graphite/70 text-sm uppercase tracking-[0.2em]">Успешных сделок</div>
+        </div>
+        <div class="text-center fade-up" style="transition-delay: 0.1s">
+          <div class="stat-number text-[clamp(4rem,9vw,8rem)]">298</div>
+          <div class="elegant-divider max-w-[160px] mx-auto my-3">·</div>
+          <div class="text-graphite/70 text-sm uppercase tracking-[0.2em]">Активных объектов</div>
+        </div>
+        <div class="text-center fade-up" style="transition-delay: 0.2s">
+          <div class="stat-number text-[clamp(4rem,9vw,8rem)]">4<span class="italic text-primary-400">г</span></div>
+          <div class="elegant-divider max-w-[160px] mx-auto my-3">·</div>
+          <div class="text-graphite/70 text-sm uppercase tracking-[0.2em]">На рынке Астаны</div>
+        </div>
+        <div class="text-center fade-up" style="transition-delay: 0.3s">
+          <div class="stat-number text-[clamp(4rem,9vw,8rem)] italic">TOP·7</div>
+          <div class="elegant-divider max-w-[160px] mx-auto my-3">·</div>
+          <div class="text-graphite/70 text-sm uppercase tracking-[0.2em]">Агенты Krisha 2023–2025</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decorative bg text -->
+    <div class="absolute left-0 -bottom-8 deco-num text-[25vw] leading-none pointer-events-none select-none">04</div>
+  </section>
+
+  <!-- KRISHA AGENT PROJECT -->
+  <section class="py-24 lg:py-40 bg-primary-900 text-white relative overflow-hidden">
+    <!-- Bg pattern -->
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-20 right-20 w-64 h-64 border border-primary-300 rounded-full"></div>
+      <div class="absolute bottom-40 left-10 w-96 h-96 border border-primary-300 rounded-full"></div>
+    </div>
+
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10 relative">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="fade-up">
+          <div class="inline-flex items-center gap-3 mb-8">
+            <span class="krisha-badge px-5 py-2 rounded-full text-primary-900 text-xs uppercase tracking-[0.2em] font-semibold flex items-center gap-2">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5L18.2 22 12 17.3 5.8 22l2.4-8.1L2 9.4h7.6z"/></svg>
+              Крыша Агент
+            </span>
+            <span class="text-white/50 text-sm">с 2022 года</span>
+          </div>
+
+          <h2 class="font-display text-5xl lg:text-6xl font-light leading-[1.05] mb-8">
+            Мы — <span class="italic">Крыша Агенты</span> со значком доверия.
+          </h2>
+
+          <p class="text-white/70 text-lg font-light leading-relaxed mb-10">
+            Официальные партнёры Krisha.kz. Наши агенты входят в ТОП по Казахстану.
+            Маркетинговый «Форсаж» за наш счёт — от 7 000 до 30 000 тенге в день на ваш объект. Для вас — бесплатно.
+          </p>
+
+          <div class="grid grid-cols-2 gap-6 mb-10">
+            <div class="border-l border-primary-400/50 pl-5">
+              <div class="text-gold text-sm uppercase tracking-[0.15em] mb-2">⋄ Эксклюзив</div>
+              <div class="text-white/80 text-sm">Один агент полностью отвечает за ваш объект</div>
+            </div>
+            <div class="border-l border-primary-400/50 pl-5">
+              <div class="text-gold text-sm uppercase tracking-[0.15em] mb-2">⋄ Маркетинг</div>
+              <div class="text-white/80 text-sm">Всегда в ТОПе Krisha.kz, 4–14 поднятий в день</div>
+            </div>
+            <div class="border-l border-primary-400/50 pl-5">
+              <div class="text-gold text-sm uppercase tracking-[0.15em] mb-2">⋄ Нет хаоса</div>
+              <div class="text-white/80 text-sm">Никаких дублирующих объявлений от других риелторов</div>
+            </div>
+            <div class="border-l border-primary-400/50 pl-5">
+              <div class="text-gold text-sm uppercase tracking-[0.15em] mb-2">⋄ Умная система</div>
+              <div class="text-white/80 text-sm">ИИ-алгоритмы усиливают рекламу в пик спроса</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-4">
+            <a href="#" onclick="navigate('home','contacts'); return false;" class="btn-primary" style="background:#fff;color:#164432">
+              Оставить объект
+            </a>
+            <a href="https://wa.me/77085050826" target="_blank" class="btn-ghost" style="color:#fff;border-color:rgba(255,255,255,0.25)">
+              Консультация
+            </a>
+          </div>
+        </div>
+
+        <div class="fade-up relative" style="transition-delay: 0.15s">
+          <div class="relative rounded-lg overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?auto=format&fit=crop&w=1200&q=80" alt="Астана ЖК" class="w-full aspect-[4/5] object-cover"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-primary-900/80 via-transparent to-transparent"></div>
+          </div>
+
+          <!-- Floating badge -->
+          <div class="absolute -top-8 -right-4 bg-white text-primary-900 p-6 rounded-lg shadow-lift max-w-[220px]">
+            <div class="text-xs uppercase tracking-[0.2em] text-primary-600 mb-2">Объявления</div>
+            <div class="font-display text-4xl font-medium leading-none mb-2">×2</div>
+            <div class="text-sm text-graphite/70">больше звонков со значком «Проверенный Агент»</div>
+          </div>
+
+          <!-- Floating badge 2 -->
+          <div class="absolute -bottom-6 -left-4 bg-gold text-primary-900 p-5 rounded-lg shadow-lift max-w-[200px]">
+            <div class="text-xs uppercase tracking-[0.2em] mb-2">Маркетинг</div>
+            <div class="font-display text-2xl font-medium leading-tight">от 7 000 до 30 000 ₸/день</div>
+            <div class="text-xs mt-2 opacity-80">для вас — бесплатно</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="py-24 lg:py-40 bg-ivory">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <div class="max-w-3xl mb-20 fade-up">
+        <div class="section-label">Наши преимущества</div>
+        <h2 class="font-display text-5xl lg:text-6xl text-primary-900 font-light leading-[1.05]">
+          Почему выбирают <span class="italic text-primary-600">Дом&nbsp;Комфорт</span>
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <!-- 1 -->
+        <div class="premium-card p-10 fade-up">
+          <div class="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center mb-6">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F7A54" stroke-width="1.5"><path d="M12 2l2.4 7.4H22l-6.2 4.5L18.2 22 12 17.3 5.8 22l2.4-8.1L2 9.4h7.6z"/></svg>
+          </div>
+          <h3 class="font-display text-3xl text-primary-900 font-medium mb-4">Лучшие агенты</h3>
+          <p class="text-graphite/70 font-light leading-relaxed">Команда в ТОП-7 Krisha.kz три года подряд — 2023, 2024, 2025. Каждый сотрудник проходит строгий отбор и обучение.</p>
+        </div>
+        <!-- 2 -->
+        <div class="premium-card p-10 fade-up" style="transition-delay: 0.1s">
+          <div class="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center mb-6">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F7A54" stroke-width="1.5"><path d="M3 11l9-7 9 7v11H3V11z"/><path d="M9 22V12h6v10"/></svg>
+          </div>
+          <h3 class="font-display text-3xl text-primary-900 font-medium mb-4">Умная система</h3>
+          <p class="text-graphite/70 font-light leading-relaxed">CRM, ИИ-алгоритмы Krisha, автоматические поднятия и подборки. Технологии работают на скорость продажи.</p>
+        </div>
+        <!-- 3 -->
+        <div class="premium-card p-10 fade-up" style="transition-delay: 0.2s">
+          <div class="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center mb-6">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F7A54" stroke-width="1.5"><path d="M12 2L3 7v5c0 5 4 9 9 10 5-1 9-5 9-10V7l-9-5z"/></svg>
+          </div>
+          <h3 class="font-display text-3xl text-primary-900 font-medium mb-4">Безопасность</h3>
+          <p class="text-graphite/70 font-light leading-relaxed">Квалифицированные юристы на каждом этапе. Тщательная проверка документов, чистота сделок, безопасные расчёты.</p>
+        </div>
+        <!-- 4 -->
+        <div class="premium-card p-10 fade-up" style="transition-delay: 0s">
+          <div class="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center mb-6">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F7A54" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+          </div>
+          <h3 class="font-display text-3xl text-primary-900 font-medium mb-4">Одно окно</h3>
+          <p class="text-graphite/70 font-light leading-relaxed">Продажа, покупка, ипотека, новостройки, юр. сопровождение, нотариальное оформление — всё под одной крышей.</p>
+        </div>
+        <!-- 5 -->
+        <div class="premium-card p-10 fade-up" style="transition-delay: 0.1s">
+          <div class="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center mb-6">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F7A54" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <h3 class="font-display text-3xl text-primary-900 font-medium mb-4">Полное сопровождение</h3>
+          <p class="text-graphite/70 font-light leading-relaxed">Ведём сделку от звонка до ДКП. Еженедельные отчёты, персональный ипотечный брокер, прозрачный процесс.</p>
+        </div>
+        <!-- 6 -->
+        <div class="premium-card p-10 fade-up" style="transition-delay: 0.2s">
+          <div class="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center mb-6">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F7A54" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3 class="font-display text-3xl text-primary-900 font-medium mb-4">Гарантия результата</h3>
+          <p class="text-graphite/70 font-light leading-relaxed">Работаем по эксклюзивному договору. Один агент полностью отвечает за продажу — от фотосессии до получения денег.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="py-24 lg:py-40 bg-cream">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-16 gap-8 fade-up">
+        <div class="max-w-2xl">
+          <div class="section-label">Наши услуги</div>
+          <h2 class="font-display text-5xl lg:text-6xl text-primary-900 font-light leading-[1.05]">
+            Все услуги в <span class="italic text-primary-600">одном окне</span>
+          </h2>
+        </div>
+        <p class="text-graphite/70 max-w-md font-light leading-relaxed">
+          Мы сопровождаем сделку на всех этапах — от первого просмотра до передачи ключей.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <!-- Service 1 -->
+        <div class="group relative bg-white rounded-lg overflow-hidden fade-up premium-card">
+          <div class="aspect-[16/10] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover prop-img" alt="Продажа"/>
+          </div>
+          <div class="p-8">
+            <div class="text-gold text-xs uppercase tracking-[0.2em] mb-3">01 · Сделки</div>
+            <h3 class="font-display text-3xl text-primary-900 font-medium mb-4">Продажа недвижимости</h3>
+            <p class="text-graphite/70 font-light mb-6">Продаём быстрее рынка по оптимальной цене. Комплексный маркетинг объекта: профессиональные фото, описание, аналитика.</p>
+            <a href="#" onclick="navigate('home','contacts'); return false;" class="fancy-link text-primary-700 font-medium inline-flex items-center gap-2">
+              Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="group relative bg-white rounded-lg overflow-hidden fade-up premium-card" style="transition-delay: 0.1s">
+          <div class="aspect-[16/10] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover prop-img" alt="Покупка"/>
+          </div>
+          <div class="p-8">
+            <div class="text-gold text-xs uppercase tracking-[0.2em] mb-3">02 · Сделки</div>
+            <h3 class="font-display text-3xl text-primary-900 font-medium mb-4">Покупка недвижимости</h3>
+            <p class="text-graphite/70 font-light mb-6">Профессиональный подбор, полная проверка выбранного объекта, помощь в оформлении всех документов.</p>
+            <a href="#" onclick="navigate('home','contacts'); return false;" class="fancy-link text-primary-700 font-medium inline-flex items-center gap-2">
+              Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="group relative bg-white rounded-lg overflow-hidden fade-up premium-card" style="transition-delay: 0.2s">
+          <div class="aspect-[16/10] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover prop-img" alt="Новостройки"/>
+          </div>
+          <div class="p-8">
+            <div class="text-gold text-xs uppercase tracking-[0.2em] mb-3">03 · Новостройки</div>
+            <h3 class="font-display text-3xl text-primary-900 font-medium mb-4">Новостройки</h3>
+            <p class="text-graphite/70 font-light mb-6">0% комиссия для покупателя, доступ ко всем застройщикам Астаны, полное сопровождение сделки.</p>
+            <a href="#" onclick="navigate('home','contacts'); return false;" class="fancy-link text-primary-700 font-medium inline-flex items-center gap-2">
+              Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Service 4 -->
+        <div class="group relative bg-white rounded-lg overflow-hidden fade-up premium-card">
+          <div class="aspect-[16/10] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover prop-img" alt="Ипотека"/>
+          </div>
+          <div class="p-8">
+            <div class="text-gold text-xs uppercase tracking-[0.2em] mb-3">04 · Финансы</div>
+            <h3 class="font-display text-3xl text-primary-900 font-medium mb-4">Ипотечное кредитование</h3>
+            <p class="text-graphite/70 font-light mb-6">Сотрудничество со всеми ведущими банками, высокий шанс одобрения, персональный ипотечный брокер.</p>
+            <a href="#" onclick="navigate('home','contacts'); return false;" class="fancy-link text-primary-700 font-medium inline-flex items-center gap-2">
+              Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Service 5 -->
+        <div class="group relative bg-white rounded-lg overflow-hidden fade-up premium-card" style="transition-delay: 0.1s">
+          <div class="aspect-[16/10] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover prop-img" alt="Юр сопровождение"/>
+          </div>
+          <div class="p-8">
+            <div class="text-gold text-xs uppercase tracking-[0.2em] mb-3">05 · Право</div>
+            <h3 class="font-display text-3xl text-primary-900 font-medium mb-4">Юридическое сопровождение</h3>
+            <p class="text-graphite/70 font-light mb-6">Аудит сделок, сложные договоры, чистота сделок, обходы. Юридическая поддержка OND.kz.</p>
+            <a href="#" onclick="navigate('home','contacts'); return false;" class="fancy-link text-primary-700 font-medium inline-flex items-center gap-2">
+              Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Service 6 -->
+        <div class="group relative bg-white rounded-lg overflow-hidden fade-up premium-card" style="transition-delay: 0.2s">
+          <div class="aspect-[16/10] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover prop-img" alt="Коммерческая"/>
+          </div>
+          <div class="p-8">
+            <div class="text-gold text-xs uppercase tracking-[0.2em] mb-3">06 · Коммерция</div>
+            <h3 class="font-display text-3xl text-primary-900 font-medium mb-4">Коммерческая недвижимость</h3>
+            <p class="text-graphite/70 font-light mb-6">Офисы, магазины, склады. Нотариальное оформление документов, безопасные расчёты, полный цикл.</p>
+            <a href="#" onclick="navigate('home','contacts'); return false;" class="fancy-link text-primary-700 font-medium inline-flex items-center gap-2">
+              Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM PREVIEW -->
+  <section class="py-24 lg:py-40 bg-ivory">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-16 gap-8 fade-up">
+        <div class="max-w-2xl">
+          <div class="section-label">Команда</div>
+          <h2 class="font-display text-5xl lg:text-6xl text-primary-900 font-light leading-[1.05]">
+            Наши <span class="italic text-primary-600">агенты</span>
+          </h2>
+          <p class="text-graphite/70 mt-6 font-light text-lg leading-relaxed max-w-xl">
+            Команда лучших риелторов Астаны. Каждый агент — эксперт со своей специализацией и портфелем объектов.
+          </p>
+        </div>
+        <a href="#" onclick="navigate('agents'); return false;" class="btn-ghost whitespace-nowrap">
+          Все агенты
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 fade-up">
+        <!-- Team preview cards rendered via JS from shared data -->
+        <div id="team-preview-grid" class="contents"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW WE WORK -->
+  <section class="py-24 lg:py-40 bg-primary-900 text-white relative overflow-hidden">
+    <div class="absolute top-0 right-0 deco-num text-[20vw] leading-none opacity-[0.05] pointer-events-none">05</div>
+
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10 relative">
+      <div class="max-w-2xl mb-20 fade-up">
+        <div class="inline-flex items-center gap-3 text-primary-300 text-xs uppercase tracking-[0.3em] mb-6">
+          <span class="w-8 h-[1px] bg-primary-300"></span>
+          Процесс
+        </div>
+        <h2 class="font-display text-5xl lg:text-6xl font-light leading-[1.05]">
+          Как мы <span class="italic text-primary-300">работаем</span>
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div class="fade-up">
+          <div class="font-display text-5xl text-primary-300 font-light mb-4">01</div>
+          <h3 class="font-display text-2xl font-medium mb-3">Заявка</h3>
+          <p class="text-white/60 text-sm font-light leading-relaxed">Вы оставляете заявку или пишете в WhatsApp — мы связываемся в течение часа.</p>
+        </div>
+        <div class="fade-up" style="transition-delay: 0.1s">
+          <div class="font-display text-5xl text-primary-300 font-light mb-4">02</div>
+          <h3 class="font-display text-2xl font-medium mb-3">Встреча</h3>
+          <p class="text-white/60 text-sm font-light leading-relaxed">Выезд агента на объект, обсуждение цели, оценка, экспертный план действий.</p>
+        </div>
+        <div class="fade-up" style="transition-delay: 0.2s">
+          <div class="font-display text-5xl text-primary-300 font-light mb-4">03</div>
+          <h3 class="font-display text-2xl font-medium mb-3">Договор</h3>
+          <p class="text-white/60 text-sm font-light leading-relaxed">Эксклюзивный договор онлайн или в офисе. Подключение «Крыша Агент».</p>
+        </div>
+        <div class="fade-up" style="transition-delay: 0.3s">
+          <div class="font-display text-5xl text-primary-300 font-light mb-4">04</div>
+          <h3 class="font-display text-2xl font-medium mb-3">Маркетинг</h3>
+          <p class="text-white/60 text-sm font-light leading-relaxed">Фотосессия, описание, вывод в ТОП Krisha.kz, работа с аудиторией.</p>
+        </div>
+        <div class="fade-up" style="transition-delay: 0.4s">
+          <div class="font-display text-5xl text-primary-300 font-light mb-4">05</div>
+          <h3 class="font-display text-2xl font-medium mb-3">Сделка</h3>
+          <p class="text-white/60 text-sm font-light leading-relaxed">Показы, переговоры, юр. сопровождение, подписание ДКП, безопасные расчёты.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNERS -->
+  <section class="py-20 bg-cream overflow-hidden">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10 mb-12">
+      <div class="text-center fade-up">
+        <div class="elegant-divider max-w-md mx-auto mb-4">Нам доверяют</div>
+        <h3 class="font-display text-3xl lg:text-4xl text-primary-900 font-light">Официальные партнёры</h3>
+      </div>
+    </div>
+    <div class="overflow-hidden">
+      <div class="marquee items-center whitespace-nowrap">
+        <!-- Set 1 -->
+        <div class="flex items-center gap-20 shrink-0">
+          <span class="font-display text-3xl text-graphite/40 italic">Krisha.kz</span>
+          <span class="font-display text-3xl text-graphite/40 font-medium">BI Group</span>
+          <span class="font-display text-3xl text-graphite/40 italic">BELES</span>
+          <span class="font-display text-3xl text-graphite/40 font-medium">Ulutau Group</span>
+          <span class="font-display text-3xl text-graphite/40 italic">Tumar</span>
+          <span class="font-display text-3xl text-graphite/40 font-medium">Galamat</span>
+          <span class="font-display text-3xl text-graphite/40 italic">Kolesa Group</span>
+          <span class="font-display text-3xl text-graphite/40 font-medium">OND.kz</span>
+        </div>
+        <!-- Set 2 (duplicate for seamless loop) -->
+        <div class="flex items-center gap-20 shrink-0">
+          <span class="font-display text-3xl text-graphite/40 italic">Krisha.kz</span>
+          <span class="font-display text-3xl text-graphite/40 font-medium">BI Group</span>
+          <span class="font-display text-3xl text-graphite/40 italic">BELES</span>
+          <span class="font-display text-3xl text-graphite/40 font-medium">Ulutau Group</span>
+          <span class="font-display text-3xl text-graphite/40 italic">Tumar</span>
+          <span class="font-display text-3xl text-graphite/40 font-medium">Galamat</span>
+          <span class="font-display text-3xl text-graphite/40 italic">Kolesa Group</span>
+          <span class="font-display text-3xl text-graphite/40 font-medium">OND.kz</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="py-24 lg:py-40 bg-ivory">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <div class="max-w-2xl mb-16 fade-up">
+        <div class="section-label">Отзывы</div>
+        <h2 class="font-display text-5xl lg:text-6xl text-primary-900 font-light leading-[1.05]">
+          Что говорят наши <span class="italic text-primary-600">клиенты</span>
+        </h2>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6 lg:gap-8">
+        <div class="premium-card p-10 fade-up">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="#3E9569" class="mb-6 opacity-70"><path d="M10 11H6a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2v6c0 2.5-1.5 5-5 5v-2c2 0 3-1.5 3-3V11zm10 0h-4a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2v6c0 2.5-1.5 5-5 5v-2c2 0 3-1.5 3-3V11z"/></svg>
+          <p class="font-display text-xl text-graphite leading-relaxed mb-8 italic">Продали квартиру за 2 недели по нашей цене. Агент вёл сделку полностью — от фотосессии до ДКП. Спокойно, профессионально, без суеты.</p>
+          <div class="flex items-center gap-4 pt-6 border-t border-primary-900/10">
+            <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center font-medium text-primary-700">А</div>
+            <div>
+              <div class="font-medium text-graphite">Айбек Сапаров</div>
+              <div class="text-sm text-graphite/60">Продажа 2-комн. кв., Алматинский р-н</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="premium-card p-10 fade-up" style="transition-delay: 0.1s">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="#3E9569" class="mb-6 opacity-70"><path d="M10 11H6a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2v6c0 2.5-1.5 5-5 5v-2c2 0 3-1.5 3-3V11zm10 0h-4a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2v6c0 2.5-1.5 5-5 5v-2c2 0 3-1.5 3-3V11z"/></svg>
+          <p class="font-display text-xl text-graphite leading-relaxed mb-8 italic">Помогли купить квартиру в ипотеку. Нашли лучшую ставку в банке, полностью сопроводили оформление. Всё прозрачно, никаких сюрпризов.</p>
+          <div class="flex items-center gap-4 pt-6 border-t border-primary-900/10">
+            <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center font-medium text-primary-700">Д</div>
+            <div>
+              <div class="font-medium text-graphite">Дина Нурланова</div>
+              <div class="text-sm text-graphite/60">Покупка 3-комн. кв. с ипотекой</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="premium-card p-10 fade-up" style="transition-delay: 0.2s">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="#3E9569" class="mb-6 opacity-70"><path d="M10 11H6a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2v6c0 2.5-1.5 5-5 5v-2c2 0 3-1.5 3-3V11zm10 0h-4a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2v6c0 2.5-1.5 5-5 5v-2c2 0 3-1.5 3-3V11z"/></svg>
+          <p class="font-display text-xl text-graphite leading-relaxed mb-8 italic">Когда клиенты видят объём работы — они иначе смотрят на профессию риелтора. Команда «Дом Комфорт» показала настоящий сервис.</p>
+          <div class="flex items-center gap-4 pt-6 border-t border-primary-900/10">
+            <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center font-medium text-primary-700">М</div>
+            <div>
+              <div class="font-medium text-graphite">Мирас К.</div>
+              <div class="text-sm text-graphite/60">Продажа квартиры в Есильском р-не</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="contacts" class="py-24 lg:py-40 bg-cream relative overflow-hidden">
+    <div class="absolute right-0 top-0 deco-num text-[22vw] leading-none pointer-events-none">06</div>
+
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10 relative">
+      <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div class="fade-up">
+          <div class="section-label">Контакты</div>
+          <h2 class="font-display text-5xl lg:text-7xl text-primary-900 font-light leading-[0.95] mb-8">
+            Готовы к<br><span class="italic text-primary-600">сделке?</span>
+          </h2>
+          <p class="text-lg text-graphite/70 font-light leading-relaxed mb-10 max-w-md">
+            Оставьте заявку или свяжитесь с нами — ответим в течение часа и предложим план, подходящий именно вам.
+          </p>
+
+          <div class="space-y-6 mb-10">
+            <a href="https://wa.me/77085050826" target="_blank" class="flex items-start gap-4 group">
+              <div class="w-12 h-12 rounded-full bg-primary-900 flex items-center justify-center shrink-0 group-hover:bg-primary-600 transition">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.966-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+              </div>
+              <div>
+                <div class="text-xs uppercase tracking-[0.2em] text-graphite/50 mb-1">WhatsApp</div>
+                <div class="font-display text-2xl text-primary-900 font-medium">+7 708 505 08 26</div>
+              </div>
+            </a>
+
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-full bg-primary-900 flex items-center justify-center shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div>
+                <div class="text-xs uppercase tracking-[0.2em] text-graphite/50 mb-1">Офис</div>
+                <div class="font-display text-2xl text-primary-900 font-medium">ул. А. Бараева, 16, офис №2</div>
+                <div class="text-sm text-graphite/60 mt-1">Астана · Центр недвижимости и ипотеки</div>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-full bg-primary-900 flex items-center justify-center shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <div>
+                <div class="text-xs uppercase tracking-[0.2em] text-graphite/50 mb-1">Режим работы</div>
+                <div class="font-display text-2xl text-primary-900 font-medium">Ежедневно · 09:00—21:00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="bg-white p-8 lg:p-12 rounded-lg shadow-card fade-up" style="transition-delay: 0.15s">
+          <h3 class="font-display text-3xl text-primary-900 font-medium mb-2">Оставить заявку</h3>
+          <p class="text-sm text-graphite/60 mb-8">Свяжемся с вами в течение часа</p>
+          <form onsubmit="handleForm(event)" class="space-y-5">
+            <div>
+              <label class="text-xs uppercase tracking-[0.15em] text-graphite/60 mb-2 block">Ваше имя</label>
+              <input type="text" name="name" required class="w-full border-b border-graphite/20 py-3 bg-transparent focus:border-primary-600 focus:outline-none transition placeholder:text-graphite/40" placeholder="Как к вам обращаться"/>
+            </div>
+            <div>
+              <label class="text-xs uppercase tracking-[0.15em] text-graphite/60 mb-2 block">Телефон</label>
+              <input type="tel" name="phone" required class="w-full border-b border-graphite/20 py-3 bg-transparent focus:border-primary-600 focus:outline-none transition placeholder:text-graphite/40" placeholder="+7 (___) ___ __ __"/>
+            </div>
+            <div>
+              <label class="text-xs uppercase tracking-[0.15em] text-graphite/60 mb-2 block">Услуга</label>
+              <select name="service" class="w-full border-b border-graphite/20 py-3 bg-transparent focus:border-primary-600 focus:outline-none transition">
+                <option>Продажа недвижимости</option>
+                <option>Покупка недвижимости</option>
+                <option>Ипотека</option>
+                <option>Новостройки</option>
+                <option>Юр. сопровождение</option>
+                <option>Другое</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs uppercase tracking-[0.15em] text-graphite/60 mb-2 block">Сообщение</label>
+              <textarea name="message" rows="3" class="w-full border-b border-graphite/20 py-3 bg-transparent focus:border-primary-600 focus:outline-none transition placeholder:text-graphite/40 resize-none" placeholder="Расскажите о задаче"></textarea>
+            </div>
+            <button type="submit" class="btn-primary w-full justify-center mt-8">
+              Отправить заявку
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </button>
+            <p class="text-xs text-graphite/50 text-center pt-2">Нажимая кнопку, вы соглашаетесь на обработку персональных данных</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- =================================================================== -->
+<!-- =========================== AGENTS PAGE =========================== -->
+<!-- =================================================================== -->
+<main id="page-agents" class="page">
+  <!-- Hero -->
+  <section class="pt-40 pb-20 bg-primary-900 text-white relative overflow-hidden">
+    <div class="absolute top-20 right-20 w-96 h-96 border border-primary-500/20 rounded-full"></div>
+    <div class="absolute -bottom-40 -left-20 w-[600px] h-[600px] border border-primary-500/10 rounded-full"></div>
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10 relative">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-3 text-primary-300 text-xs uppercase tracking-[0.3em] mb-6">
+          <span class="w-8 h-[1px] bg-primary-300"></span>
+          Наша команда
+        </div>
+        <h1 class="font-display text-6xl lg:text-8xl font-light leading-[0.95] mb-8">
+          Агенты, которые<br>
+          <span class="italic text-primary-300">делают сделки.</span>
+        </h1>
+        <p class="text-white/70 text-lg font-light max-w-2xl leading-relaxed">
+          Команда «Дом Комфорт» — это лучшие риелторы Астаны, экспертный юридический блок, ипотечные брокеры и маркетологи.
+          Нажмите на агента, чтобы посмотреть его объекты.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leadership team (specialists) -->
+  <section class="py-20 lg:py-32 bg-ivory">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <div class="max-w-2xl mb-16 fade-up">
+        <div class="section-label">Руководство</div>
+        <h2 class="font-display text-4xl lg:text-5xl text-primary-900 font-light">
+          Руководители и <span class="italic text-primary-600">ключевые специалисты</span>
+        </h2>
+      </div>
+      <div id="leadership-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 fade-up"></div>
+    </div>
+  </section>
+
+  <!-- Agents grid -->
+  <section class="py-20 lg:py-32 bg-cream">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <div class="flex items-end justify-between mb-12 flex-wrap gap-6 fade-up">
+        <div>
+          <div class="section-label">Агенты</div>
+          <h2 class="font-display text-4xl lg:text-5xl text-primary-900 font-light">
+            Топ-агенты и <span class="italic text-primary-600">эксперты рынка</span>
+          </h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-graphite/60">Всего</span>
+          <span class="font-display text-3xl text-primary-700 font-medium" id="agent-count">12</span>
+          <span class="text-sm text-graphite/60">агентов</span>
+        </div>
+      </div>
+
+      <div id="agents-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+    </div>
+  </section>
+</main>
+
+<!-- =================================================================== -->
+<!-- ========================= AGENT DETAIL PAGE ========================= -->
+<!-- =================================================================== -->
+<main id="page-agent-detail" class="page">
+  <section class="pt-32 pb-8 bg-primary-900 text-white">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <a href="#" onclick="navigate('agents'); return false;" class="text-white/60 hover:text-white text-sm inline-flex items-center gap-2 mb-8">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Все агенты
+      </a>
+    </div>
+  </section>
+
+  <div id="agent-detail-content"></div>
+</main>
+
+<!-- =================================================================== -->
+<!-- ========================= PROPERTIES PAGE ========================= -->
+<!-- =================================================================== -->
+<main id="page-properties" class="page">
+  <!-- Hero -->
+  <section class="pt-32 pb-16 bg-primary-900 text-white relative overflow-hidden">
+    <div class="absolute -right-40 -top-40 w-[600px] h-[600px] border border-primary-700/40 rounded-full"></div>
+    <div class="absolute right-20 top-20 w-[400px] h-[400px] border border-primary-700/30 rounded-full"></div>
+
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10 relative">
+      <div class="flex items-center gap-3 mb-8 fade-up">
+        <span class="w-12 h-[1px] bg-primary-400"></span>
+        <span class="text-primary-300 uppercase tracking-[0.3em] text-xs">Каталог объектов</span>
+      </div>
+      <h1 class="font-display text-5xl lg:text-7xl font-light leading-[0.95] mb-6 fade-up max-w-4xl" style="transition-delay: 0.1s">
+        Квартиры, дома и <span class="italic text-primary-300">коммерция</span> <br>в Астане.
+      </h1>
+      <p class="text-white/70 text-lg font-light max-w-2xl fade-up leading-relaxed" style="transition-delay: 0.2s">
+        Каждый объект проверен юристами агентства. Кликните на карточку, чтобы увидеть полное описание, характеристики и галерею.
+      </p>
+    </div>
+  </section>
+
+  <!-- Filters + Grid -->
+  <section class="py-16 lg:py-24 bg-ivory">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <!-- Quick filter chips -->
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-6">
+        <div>
+          <div class="text-xs uppercase tracking-[0.2em] text-graphite/50 mb-2">Найдено</div>
+          <div class="font-display text-4xl text-primary-900 font-medium" id="properties-count">—</div>
+        </div>
+
+        <div class="flex flex-wrap gap-2" id="properties-filters">
+          <button data-filter="all" class="filter-chip active">Все</button>
+          <button data-filter="Квартира" class="filter-chip">Квартиры</button>
+          <button data-filter="Новостройка" class="filter-chip">Новостройки</button>
+          <button data-filter="Дом" class="filter-chip">Дома</button>
+          <button data-filter="Коммерция" class="filter-chip">Коммерция</button>
+          <button data-filter="rent" class="filter-chip">Аренда</button>
+        </div>
+      </div>
+
+      <!-- Advanced filters toggle -->
+      <div class="flex items-center justify-between mb-6 pb-6 border-b border-primary-900/10">
+        <button id="filters-toggle" onclick="toggleAdvancedFilters()" class="inline-flex items-center gap-2 text-sm text-primary-700 hover:text-primary-900 transition font-medium">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+          <span>Расширенные фильтры</span>
+          <svg id="filters-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <button id="filters-reset" onclick="resetFilters()" class="hidden text-sm text-graphite/60 hover:text-primary-700 transition">
+          Сбросить всё
+        </button>
+      </div>
+
+      <!-- Advanced filters panel -->
+      <div id="advanced-filters" class="hidden mb-10 p-6 lg:p-8 bg-white rounded-lg border border-primary-900/10">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Rooms -->
+          <div>
+            <label class="filter-label">Количество комнат</label>
+            <div class="flex flex-wrap gap-2 mt-2" id="filter-rooms">
+              <button data-rooms="any" class="mini-chip active">Все</button>
+              <button data-rooms="1" class="mini-chip">1</button>
+              <button data-rooms="2" class="mini-chip">2</button>
+              <button data-rooms="3" class="mini-chip">3</button>
+              <button data-rooms="4+" class="mini-chip">4+</button>
+            </div>
+          </div>
+
+          <!-- District -->
+          <div>
+            <label class="filter-label" for="filter-district">Район</label>
+            <select id="filter-district" class="filter-select">
+              <option value="">Любой район</option>
+              <option>Есильский р-н</option>
+              <option>Алматинский р-н</option>
+              <option>Сарыаркинский р-н</option>
+              <option>Караоткель</option>
+            </select>
+          </div>
+
+          <!-- Price -->
+          <div>
+            <label class="filter-label">Цена, ₸</label>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <input type="number" id="filter-price-min" placeholder="от" class="filter-input" />
+              <input type="number" id="filter-price-max" placeholder="до" class="filter-input" />
+            </div>
+          </div>
+
+          <!-- Sqm -->
+          <div>
+            <label class="filter-label">Площадь, м²</label>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <input type="number" id="filter-sqm-min" placeholder="от" class="filter-input" />
+              <input type="number" id="filter-sqm-max" placeholder="до" class="filter-input" />
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-6 border-t border-primary-900/5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <label class="filter-label" for="filter-sort">Сортировка</label>
+            <select id="filter-sort" class="filter-select mt-2 w-full md:w-64">
+              <option value="default">По умолчанию</option>
+              <option value="price-asc">Сначала дешевле</option>
+              <option value="price-desc">Сначала дороже</option>
+              <option value="sqm-desc">Больше площадь</option>
+              <option value="year-desc">Новее</option>
+            </select>
+          </div>
+          <button onclick="applyFilters()" class="btn-primary md:self-end">Показать объекты</button>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="properties-grid"></div>
+
+      <!-- Empty -->
+      <div id="properties-empty" class="hidden py-20 text-center">
+        <p class="text-graphite/60 font-light text-lg">По вашему запросу объектов не найдено.</p>
+        <p class="text-graphite/60 font-light">Попробуйте изменить фильтры или напишите нам — подберём вручную.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Can't find -->
+  <section class="py-20 lg:py-28 bg-primary-900 text-white">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10 grid lg:grid-cols-[2fr_1fr] gap-12 items-center">
+      <div>
+        <div class="text-primary-300 text-xs uppercase tracking-[0.3em] mb-4">Не нашли подходящий объект?</div>
+        <h2 class="font-display text-4xl lg:text-5xl font-light leading-[1.05] mb-6">
+          Опишите что ищете — <span class="italic text-primary-200">мы подберём.</span>
+        </h2>
+        <p class="text-white/70 font-light max-w-xl leading-relaxed">
+          У нас есть объекты, которые ещё не выставлены публично. Расскажите о бюджете, районе и пожеланиях — агент свяжется с вами в течение часа.
+        </p>
+      </div>
+      <div class="flex flex-col gap-3">
+        <a href="https://wa.me/77085050826?text=Здравствуйте!%20Ищу%20объект%20по%20параметрам:" target="_blank" class="btn-wa justify-center">
+          Написать в WhatsApp
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a href="tel:+77085050826" class="btn-ghost justify-center" style="color:#fff;border-color:rgba(255,255,255,0.3)">
+          +7 708 505 08 26
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- =================================================================== -->
+<!-- ======================= PROPERTY DETAIL PAGE ====================== -->
+<!-- =================================================================== -->
+<main id="page-property-detail" class="page">
+  <section class="pt-32 pb-6 bg-ivory">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <a href="#" onclick="navigate('properties'); return false;" class="text-graphite/60 hover:text-primary-700 text-sm inline-flex items-center gap-2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Все объекты
+      </a>
+    </div>
+  </section>
+
+  <div id="property-detail-content"></div>
+</main>
+
+<!-- =================================================================== -->
+<!-- ============================ JOIN PAGE ============================ -->
+<!-- =================================================================== -->
+<main id="page-join" class="page">
+  <!-- Hero -->
+  <section class="relative min-h-[90vh] flex items-center overflow-hidden">
+    <div class="absolute inset-0" style="background-image:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2000&q=80');background-size:cover;background-position:center"></div>
+    <div class="absolute inset-0" style="background:linear-gradient(105deg, rgba(14,46,34,0.94) 0%, rgba(14,46,34,0.85) 55%, rgba(14,46,34,0.70) 100%)"></div>
+    <div class="absolute inset-0 grain"></div>
+
+    <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-10 pt-32 pb-20 w-full">
+      <div class="max-w-3xl">
+        <div class="flex items-center gap-3 mb-8 fade-up">
+          <span class="w-12 h-[1px] bg-white/50"></span>
+          <span class="text-white/80 uppercase tracking-[0.3em] text-xs">Карьера в Дом Комфорт</span>
+        </div>
+
+        <h1 class="font-display text-white text-[clamp(3rem,7vw,6.5rem)] leading-[0.95] font-light mb-8 fade-up" style="transition-delay: 0.1s">
+          Стань агентом<br>
+          <span class="italic text-primary-200">команды №1</span><br>
+          <span class="font-medium">в Астане.</span>
+        </h1>
+
+        <p class="text-white/80 text-lg lg:text-xl font-light max-w-2xl leading-relaxed mb-12 fade-up" style="transition-delay: 0.2s">
+          Ты работаешь в системе, где каждый отвечает за результат. Используй команду — и ты вырастешь быстрее.
+          Мы принимаем ограниченное количество новых агентов.
+        </p>
+
+        <div class="flex flex-wrap gap-4 fade-up" style="transition-delay: 0.3s">
+          <a href="https://wa.me/77085050826?text=Здравствуйте!%20Хочу%20присоединиться%20к%20команде%20Дом%20Комфорт" target="_blank" class="btn-wa">
+            Подать заявку в WhatsApp
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.966-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+          </a>
+          <a href="#selection" class="btn-ghost" style="color:#fff;border-color:rgba(255,255,255,0.35)">
+            Как проходит отбор
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Us (for agents) -->
+  <section class="py-24 lg:py-40 bg-ivory">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div class="fade-up">
+          <div class="section-label">Почему Дом Комфорт</div>
+          <h2 class="font-display text-5xl lg:text-6xl text-primary-900 font-light leading-[1.05] mb-8">
+            Ты работаешь<br>
+            <span class="italic text-primary-600">не один.</span>
+          </h2>
+          <p class="text-lg text-graphite/70 font-light leading-relaxed mb-10">
+            Здесь ты работаешь в системе. Поддержка РОП, юридический блок, HR, бухгалтерия,
+            маркетинг, Krisha-менеджер. Тебе не нужно тратить время на бытовую рутину —
+            ты фокусируешься на сделках.
+          </p>
+
+          <div class="space-y-5">
+            <div class="flex gap-5 items-start">
+              <div class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center shrink-0 mt-1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2F7A54" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div>
+                <h4 class="font-display text-xl text-primary-900 font-medium mb-1">Готовая система</h4>
+                <p class="text-graphite/70 font-light">CRM, скрипты, воронка, шаблоны договоров, 4+ года отлаженных процессов.</p>
+              </div>
+            </div>
+            <div class="flex gap-5 items-start">
+              <div class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center shrink-0 mt-1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2F7A54" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div>
+                <h4 class="font-display text-xl text-primary-900 font-medium mb-1">Лиды с Krisha.kz</h4>
+                <p class="text-graphite/70 font-light">Партнёрство с 2022, ТОП-7 агентов, значок «Проверенный Агент» — в 2 раза больше звонков.</p>
+              </div>
+            </div>
+            <div class="flex gap-5 items-start">
+              <div class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center shrink-0 mt-1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2F7A54" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div>
+                <h4 class="font-display text-xl text-primary-900 font-medium mb-1">Юр. и ипотечный блок</h4>
+                <p class="text-graphite/70 font-light">OND.kz как юридическая поддержка, персональный ипотечный брокер со связями в банках.</p>
+              </div>
+            </div>
+            <div class="flex gap-5 items-start">
+              <div class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center shrink-0 mt-1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2F7A54" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div>
+                <h4 class="font-display text-xl text-primary-900 font-medium mb-1">Маркетинг за счёт компании</h4>
+                <p class="text-graphite/70 font-light">Бюджет от 7 000 до 30 000 ₸/день на каждый объект. ТОП, Горячие, Поднятия — включено.</p>
+              </div>
+            </div>
+            <div class="flex gap-5 items-start">
+              <div class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center shrink-0 mt-1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2F7A54" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div>
+                <h4 class="font-display text-xl text-primary-900 font-medium mb-1">Уютный офис и климат</h4>
+                <p class="text-graphite/70 font-light">Офис на А. Бараева 16, забота о климате и снабжении — чтобы не отвлекаться от высоких чеков.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative fade-up" style="transition-delay: 0.15s">
+          <div class="relative rounded-lg overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&q=80" alt="Команда" class="w-full aspect-[4/5] object-cover"/>
+          </div>
+          <div class="absolute -bottom-8 -left-6 lg:-left-12 bg-primary-900 text-white p-8 rounded-lg shadow-lift max-w-[280px]">
+            <div class="text-xs uppercase tracking-[0.2em] text-primary-300 mb-3">Доход агента</div>
+            <div class="font-display text-5xl font-light leading-none mb-3">до 2 000 000 ₸</div>
+            <div class="text-sm text-white/70">в месяц при работе в системе с её полным использованием</div>
+          </div>
+          <div class="absolute -top-6 -right-4 bg-gold text-primary-900 p-4 rounded-lg shadow-card">
+            <div class="font-display text-xl font-medium leading-tight">TOP·7 Krisha<br>2023 · 2024 · 2025</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats / proof -->
+  <section class="py-20 bg-primary-900 text-white">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-10 fade-up">
+        <div class="text-center">
+          <div class="font-display text-6xl lg:text-7xl font-light text-primary-300 leading-none mb-3">30+</div>
+          <div class="text-white/60 text-sm uppercase tracking-[0.2em]">Активных агентов</div>
+        </div>
+        <div class="text-center">
+          <div class="font-display text-6xl lg:text-7xl font-light text-primary-300 leading-none mb-3">1826+</div>
+          <div class="text-white/60 text-sm uppercase tracking-[0.2em]">Сделок команды</div>
+        </div>
+        <div class="text-center">
+          <div class="font-display text-6xl lg:text-7xl font-light text-primary-300 leading-none mb-3 italic">×2</div>
+          <div class="text-white/60 text-sm uppercase tracking-[0.2em]">Больше звонков со значком</div>
+        </div>
+        <div class="text-center">
+          <div class="font-display text-6xl lg:text-7xl font-light text-primary-300 leading-none mb-3">4+</div>
+          <div class="text-white/60 text-sm uppercase tracking-[0.2em]">Года на рынке</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Selection process -->
+  <section id="selection" class="py-24 lg:py-40 bg-cream">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <div class="max-w-3xl mb-20 fade-up">
+        <div class="section-label">Отбор</div>
+        <h2 class="font-display text-5xl lg:text-6xl text-primary-900 font-light leading-[1.05] mb-6">
+          Как попасть в <span class="italic text-primary-600">команду</span>
+        </h2>
+        <p class="text-lg text-graphite/70 font-light leading-relaxed">
+          Мы принимаем не всех. Отбор — это гарантия того, что команда останется сильной, а агент — успешным.
+          Весь процесс занимает 5–7 рабочих дней.
+        </p>
+      </div>
+
+      <div class="relative">
+        <!-- Vertical line -->
+        <div class="absolute left-6 lg:left-8 top-4 bottom-4 w-[1px] bg-primary-300/40 hidden md:block"></div>
+
+        <div class="space-y-10">
+          <!-- Step 1 -->
+          <div class="relative pl-16 lg:pl-24 fade-up">
+            <div class="absolute left-0 top-0 w-12 h-12 lg:w-16 lg:h-16 bg-primary-900 text-white rounded-full flex items-center justify-center font-display text-xl lg:text-2xl font-medium z-10">01</div>
+            <div class="premium-card p-8 lg:p-10">
+              <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+                <h3 class="font-display text-3xl text-primary-900 font-medium">Заявка в WhatsApp</h3>
+                <span class="text-xs uppercase tracking-[0.2em] text-primary-600 bg-primary-50 px-4 py-1.5 rounded-full">~5 минут</span>
+              </div>
+              <p class="text-graphite/70 font-light leading-relaxed">Напишите в WhatsApp компании, что хотите стать агентом. Коротко расскажите о себе: город, возраст, опыт в продажах или недвижимости (даже если его нет).</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="relative pl-16 lg:pl-24 fade-up" style="transition-delay: 0.1s">
+            <div class="absolute left-0 top-0 w-12 h-12 lg:w-16 lg:h-16 bg-primary-900 text-white rounded-full flex items-center justify-center font-display text-xl lg:text-2xl font-medium z-10">02</div>
+            <div class="premium-card p-8 lg:p-10">
+              <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+                <h3 class="font-display text-3xl text-primary-900 font-medium">Знакомство по телефону</h3>
+                <span class="text-xs uppercase tracking-[0.2em] text-primary-600 bg-primary-50 px-4 py-1.5 rounded-full">~20 минут</span>
+              </div>
+              <p class="text-graphite/70 font-light leading-relaxed">HR (Жансулу) перезвонит и проведёт первичный разговор. Цель — понять мотивацию, цели, ожидания по доходу, совместимость с культурой компании.</p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="relative pl-16 lg:pl-24 fade-up" style="transition-delay: 0.2s">
+            <div class="absolute left-0 top-0 w-12 h-12 lg:w-16 lg:h-16 bg-primary-900 text-white rounded-full flex items-center justify-center font-display text-xl lg:text-2xl font-medium z-10">03</div>
+            <div class="premium-card p-8 lg:p-10">
+              <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+                <h3 class="font-display text-3xl text-primary-900 font-medium">Собеседование в офисе</h3>
+                <span class="text-xs uppercase tracking-[0.2em] text-primary-600 bg-primary-50 px-4 py-1.5 rounded-full">~1 час</span>
+              </div>
+              <p class="text-graphite/70 font-light leading-relaxed">Встреча с РОП и руководством. Разбор кейсов, обсуждение того, как устроена работа агента в «Дом Комфорт», система мотивации, план первых 90 дней.</p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="relative pl-16 lg:pl-24 fade-up" style="transition-delay: 0.3s">
+            <div class="absolute left-0 top-0 w-12 h-12 lg:w-16 lg:h-16 bg-primary-900 text-white rounded-full flex items-center justify-center font-display text-xl lg:text-2xl font-medium z-10">04</div>
+            <div class="premium-card p-8 lg:p-10">
+              <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+                <h3 class="font-display text-3xl text-primary-900 font-medium">Обучение</h3>
+                <span class="text-xs uppercase tracking-[0.2em] text-primary-600 bg-primary-50 px-4 py-1.5 rounded-full">2 недели</span>
+              </div>
+              <p class="text-graphite/70 font-light leading-relaxed">Вводный курс по работе с Krisha.kz, CRM, договорами, юридической частью. Тренировка звонков, показов, переговоров. Обучение — за счёт компании.</p>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="relative pl-16 lg:pl-24 fade-up" style="transition-delay: 0.4s">
+            <div class="absolute left-0 top-0 w-12 h-12 lg:w-16 lg:h-16 bg-primary-600 text-white rounded-full flex items-center justify-center font-display text-xl lg:text-2xl font-medium z-10">05</div>
+            <div class="premium-card p-8 lg:p-10 border-primary-600/30">
+              <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+                <h3 class="font-display text-3xl text-primary-900 font-medium">Первая сделка</h3>
+                <span class="text-xs uppercase tracking-[0.2em] text-gold bg-gold/10 px-4 py-1.5 rounded-full">В команде</span>
+              </div>
+              <p class="text-graphite/70 font-light leading-relaxed">Ты получаешь первые объекты и лиды, ведёшь сделку с поддержкой наставника. Первый чек — чаще всего уже в первый месяц работы.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Requirements -->
+  <section class="py-24 lg:py-40 bg-ivory">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <div class="grid lg:grid-cols-2 gap-16">
+        <div class="fade-up">
+          <div class="section-label">Кого мы ищем</div>
+          <h2 class="font-display text-5xl lg:text-6xl text-primary-900 font-light leading-[1.05] mb-10">
+            Подходишь ли<br>
+            <span class="italic text-primary-600">нам ты?</span>
+          </h2>
+
+          <div class="space-y-4">
+            <div class="flex gap-4 items-start">
+              <span class="text-primary-500 text-xl leading-none mt-1">◆</span>
+              <p class="text-lg text-graphite/70 font-light leading-relaxed">Ответственный и готов работать на результат, а не на отметку</p>
+            </div>
+            <div class="flex gap-4 items-start">
+              <span class="text-primary-500 text-xl leading-none mt-1">◆</span>
+              <p class="text-lg text-graphite/70 font-light leading-relaxed">Умеешь общаться с людьми, умеешь слушать и задавать вопросы</p>
+            </div>
+            <div class="flex gap-4 items-start">
+              <span class="text-primary-500 text-xl leading-none mt-1">◆</span>
+              <p class="text-lg text-graphite/70 font-light leading-relaxed">Обучаемый — готов впитывать новое и применять сразу</p>
+            </div>
+            <div class="flex gap-4 items-start">
+              <span class="text-primary-500 text-xl leading-none mt-1">◆</span>
+              <p class="text-lg text-graphite/70 font-light leading-relaxed">Живёшь в Астане или готов переехать</p>
+            </div>
+            <div class="flex gap-4 items-start">
+              <span class="text-primary-500 text-xl leading-none mt-1">◆</span>
+              <p class="text-lg text-graphite/70 font-light leading-relaxed">Опыт в недвижимости — плюс, но не обязателен</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="fade-up" style="transition-delay: 0.15s">
+          <div class="bg-primary-900 text-white p-10 lg:p-14 rounded-lg relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-48 h-48 border border-primary-400/20 rounded-full -mr-20 -mt-20"></div>
+            <div class="relative">
+              <div class="text-gold text-xs uppercase tracking-[0.3em] mb-6">Что ты получишь</div>
+              <h3 class="font-display text-3xl lg:text-4xl font-light leading-tight mb-8">Мы даём систему. <br><span class="italic">Ты — результат.</span></h3>
+
+              <div class="space-y-4 text-white/80">
+                <div class="flex gap-3">
+                  <span class="text-primary-300">→</span>
+                  <span>Обучение полностью за счёт компании</span>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-primary-300">→</span>
+                  <span>Бюджет на маркетинг каждого объекта</span>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-primary-300">→</span>
+                  <span>Юридический блок + ипотечный брокер</span>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-primary-300">→</span>
+                  <span>CRM, скрипты, шаблоны договоров</span>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-primary-300">→</span>
+                  <span>Наставник на первые сделки</span>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-primary-300">→</span>
+                  <span>Офис в центре города</span>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-primary-300">→</span>
+                  <span>Бонусы за результат</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="py-24 lg:py-40 bg-cream relative overflow-hidden">
+    <div class="absolute inset-0 opacity-40 pointer-events-none">
+      <div class="absolute top-20 right-[-10%] w-96 h-96 bg-primary-200 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-[-5%] w-96 h-96 bg-gold/30 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10 relative">
+      <div class="max-w-3xl mx-auto text-center fade-up">
+        <div class="elegant-divider max-w-md mx-auto mb-6">Готов?</div>
+        <h2 class="font-display text-6xl lg:text-8xl text-primary-900 font-light leading-[0.95] mb-8">
+          Сделай первый<br>
+          <span class="italic text-primary-600">шаг сегодня.</span>
+        </h2>
+        <p class="text-lg text-graphite/70 font-light leading-relaxed mb-12 max-w-xl mx-auto">
+          Напиши нам в WhatsApp — мы свяжемся с тобой в течение часа и расскажем всё о работе в команде «Дом Комфорт».
+        </p>
+
+        <a href="https://wa.me/77085050826?text=Здравствуйте!%20Хочу%20присоединиться%20к%20команде%20Дом%20Комфорт" target="_blank" class="btn-wa text-lg" style="padding: 20px 48px; font-size: 17px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.966-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Написать в WhatsApp
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+
+        <p class="text-sm text-graphite/50 mt-8">+7 708 505 08 26 · Астана, ул. А. Бараева 16, офис №2</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer class="bg-primary-900 text-white py-20 pb-10">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-primary-700">
+      <div>
+        <div class="flex items-center gap-3 mb-6">
+          <svg class="logo-svg" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 45 L18 25 L30 15 L30 45 Z" stroke="#7BBF9E" stroke-width="2.5" fill="none"/>
+            <path d="M30 45 L30 22 L42 30 L42 45 Z" stroke="#7BBF9E" stroke-width="2.5" fill="none"/>
+            <path d="M14 45 L18 45 L18 32 Z" fill="#7BBF9E"/>
+            <path d="M42 45 L46 45 L46 35 Z" fill="#7BBF9E"/>
+          </svg>
+          <div class="flex flex-col leading-tight">
+            <span class="font-display text-2xl text-primary-100 font-semibold">Дом Комфорт</span>
+            <span class="text-[10px] uppercase tracking-[0.2em] text-primary-300">агентство недвижимости</span>
+          </div>
+        </div>
+        <p class="text-white/60 font-light text-sm leading-relaxed mb-6">
+          Премиальное агентство недвижимости в Астане. Продаём быстрее. Безопасно. С результатом.
+        </p>
+        <div class="flex gap-3">
+          <a href="https://wa.me/77085050826" target="_blank" class="w-10 h-10 rounded-full bg-primary-700 hover:bg-primary-600 flex items-center justify-center transition">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.966-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+          </a>
+          <a href="#" class="w-10 h-10 rounded-full bg-primary-700 hover:bg-primary-600 flex items-center justify-center transition">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.8.3 2.2.5.6.2 1 .5 1.4 1 .5.4.8.8 1 1.4.2.4.4 1 .5 2.2.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.3 1.8-.5 2.2-.2.6-.5 1-1 1.4-.4.5-.8.8-1.4 1-.4.2-1 .4-2.2.5-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.8-.3-2.2-.5-.6-.2-1-.5-1.4-1-.5-.4-.8-.8-1-1.4-.2-.4-.4-1-.5-2.2-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-1.2.3-1.8.5-2.2.2-.6.5-1 1-1.4.4-.5.8-.8 1.4-1 .4-.2 1-.4 2.2-.5 1.2-.1 1.6-.1 4.8-.1M12 0C8.7 0 8.3 0 7.1.1c-1.3.1-2.2.3-3 .6-.8.3-1.5.7-2.2 1.4C1.2 2.8.8 3.5.5 4.3c-.3.8-.5 1.7-.6 3C0 8.3 0 8.7 0 12s0 3.7.1 4.9c.1 1.3.3 2.2.6 3 .3.8.7 1.5 1.4 2.2.7.7 1.4 1.1 2.2 1.4.8.3 1.7.5 3 .6 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c1.3-.1 2.2-.3 3-.6.8-.3 1.5-.7 2.2-1.4.7-.7 1.1-1.4 1.4-2.2.3-.8.5-1.7.6-3 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.1-1.3-.3-2.2-.6-3-.3-.8-.7-1.5-1.4-2.2-.7-.7-1.4-1.1-2.2-1.4-.8-.3-1.7-.5-3-.6C15.7 0 15.3 0 12 0zm0 5.8c-3.4 0-6.2 2.8-6.2 6.2s2.8 6.2 6.2 6.2 6.2-2.8 6.2-6.2-2.8-6.2-6.2-6.2zm0 10.2c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm6.4-11.8c-.8 0-1.4.6-1.4 1.4s.6 1.4 1.4 1.4 1.4-.6 1.4-1.4-.6-1.4-1.4-1.4z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="font-display text-lg font-medium mb-5 text-primary-200">Навигация</h4>
+        <ul class="space-y-3 text-sm text-white/70">
+          <li><a href="#" onclick="navigate('home'); return false;" class="hover:text-white transition">Главная</a></li>
+          <li><a href="#" onclick="navigate('agents'); return false;" class="hover:text-white transition">Агенты</a></li>
+          <li><a href="#" onclick="navigate('properties'); return false;" class="hover:text-white transition">Объекты</a></li>
+          <li><a href="#" onclick="navigate('home','services'); return false;" class="hover:text-white transition">Услуги</a></li>
+          <li><a href="#" onclick="navigate('join'); return false;" class="hover:text-white transition">Карьера</a></li>
+          <li><a href="#" onclick="navigate('home','contacts'); return false;" class="hover:text-white transition">Контакты</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-display text-lg font-medium mb-5 text-primary-200">Услуги</h4>
+        <ul class="space-y-3 text-sm text-white/70">
+          <li><a href="#" onclick="navigate('home','services'); return false;" class="hover:text-white transition">Продажа</a></li>
+          <li><a href="#" onclick="navigate('home','services'); return false;" class="hover:text-white transition">Покупка</a></li>
+          <li><a href="#" onclick="navigate('home','services'); return false;" class="hover:text-white transition">Новостройки</a></li>
+          <li><a href="#" onclick="navigate('home','services'); return false;" class="hover:text-white transition">Ипотека</a></li>
+          <li><a href="#" onclick="navigate('home','services'); return false;" class="hover:text-white transition">Юр. сопровождение</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-display text-lg font-medium mb-5 text-primary-200">Контакты</h4>
+        <ul class="space-y-3 text-sm text-white/70">
+          <li>
+            <a href="https://wa.me/77085050826" class="hover:text-white transition">
+              +7 708 505 08 26
+            </a>
+          </li>
+          <li class="leading-relaxed">ул. А. Бараева 16, офис №2<br>Астана, Казахстан</li>
+          <li>Ежедневно · 09:00—21:00</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40">
+      <div>© 2026 АН «Дом Комфорт». Все права защищены.</div>
+      <div class="flex gap-6">
+        <a href="#" class="hover:text-white transition">Политика конфиденциальности</a>
+        <a href="#" class="hover:text-white transition">Публичная оферта</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script type="module" src="/assets/js/app.js"></script>
+</body>
+</html>
