@@ -85,7 +85,11 @@ exports.list = async (req, res, next) => {
 
     const items = await prisma.property.findMany({
       where,
-      include: { agent: { select: { id: true, name: true, phone: true } } },
+      include: {
+        agent:              { select: { id: true, name: true, phone: true } },
+        developer:          { select: { id: true, name: true } },
+        residentialComplex: { select: { id: true, name: true } },
+      },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -99,13 +103,18 @@ exports.getOne = async (req, res, next) => {
   try {
     const p = await prisma.property.findUnique({
       where: { id: req.params.id },
-      include: { agent: true },
+      include: {
+        agent: true,
+        developer: true,
+        residentialComplex: { include: { developer: true } },
+      },
     });
     if (!p) return res.status(404).json({ error: 'Объект не найден' });
 
     if (!(await canEditProperty(req.user, p))) {
       return res.status(403).json({ error: 'Нет прав для просмотра' });
     }
+    
 
     res.json(serialize(p));
   } catch (err) {
@@ -159,6 +168,10 @@ exports.create = async (req, res, next) => {
         gallery:       [],                            // фото загружаются отдельно
         top:           !!req.body.top,
         active:        req.body.active !== false,
+        housingClass:         req.body.housingClass || null,
+        buildingType:         req.body.buildingType || null,
+        developerId:          req.body.developerId          ? parseInt(req.body.developerId, 10)          : null,
+        residentialComplexId: req.body.residentialComplexId ? parseInt(req.body.residentialComplexId, 10) : null,
         agentId,
       },
     });
@@ -195,6 +208,10 @@ exports.update = async (req, res, next) => {
     if (req.body.features !== undefined)      updateData.features = Array.isArray(req.body.features) ? req.body.features : [];
     if (req.body.top !== undefined)           updateData.top = !!req.body.top;
     if (req.body.active !== undefined)        updateData.active = !!req.body.active;
+    if (req.body.housingClass !== undefined)         updateData.housingClass = req.body.housingClass || null;
+    if (req.body.buildingType !== undefined)         updateData.buildingType = req.body.buildingType || null;
+    if (req.body.developerId !== undefined)          updateData.developerId = req.body.developerId ? parseInt(req.body.developerId, 10) : null;
+    if (req.body.residentialComplexId !== undefined) updateData.residentialComplexId = req.body.residentialComplexId ? parseInt(req.body.residentialComplexId, 10) : null;
 
     if (req.body.price !== undefined) {
       const price = parsePrice(req.body.price);

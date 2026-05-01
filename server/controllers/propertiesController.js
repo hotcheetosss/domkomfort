@@ -12,16 +12,39 @@ function serializeProperty(p) {
 
 exports.list = async (req, res, next) => {
   try {
-    const { type, deal, district, agentId } = req.query;
+    const {
+      type, deal, district, agentId,
+      developerId, complexId, housingClass, buildingType,
+      yearMin, yearMax, floorMin, floorMax,
+    } = req.query;
 
     const where = { active: true };
-    if (type)     where.type = type;
-    if (deal)     where.deal = deal;
-    if (district) where.district = district;
-    if (agentId)  where.agentId = agentId;
+    if (type)         where.type = type;
+    if (deal)         where.deal = deal;
+    if (district)     where.district = district;
+    if (agentId)      where.agentId = agentId;
+    if (developerId)  where.developerId = parseInt(developerId, 10);
+    if (complexId)    where.residentialComplexId = parseInt(complexId, 10);
+    if (housingClass) where.housingClass = housingClass;
+    if (buildingType) where.buildingType = buildingType;
+
+    if (yearMin || yearMax) {
+      where.year = {};
+      if (yearMin) where.year.gte = parseInt(yearMin, 10);
+      if (yearMax) where.year.lte = parseInt(yearMax, 10);
+    }
+    if (floorMin || floorMax) {
+      where.floor = {};
+      if (floorMin) where.floor.gte = parseInt(floorMin, 10);
+      if (floorMax) where.floor.lte = parseInt(floorMax, 10);
+    }
 
     const items = await prisma.property.findMany({
       where,
+      include: {
+        developer:          { select: { id: true, name: true } },
+        residentialComplex: { select: { id: true, name: true } },
+      },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -38,7 +61,11 @@ exports.getOne = async (req, res, next) => {
   try {
     const p = await prisma.property.findUnique({
       where: { id: req.params.id },
-      include: { agent: true },     // сразу подтянуть данные агента
+      include: {
+        agent: true,
+        developer: true,
+        residentialComplex: { include: { developer: true } },
+      },
     });
     if (!p) return res.status(404).json({ error: 'Объект не найден' });
     res.json(serializeProperty(p));

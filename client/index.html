@@ -798,19 +798,6 @@
     </div>
   </section>
 
-  <!-- Leadership team (specialists) -->
-  <section class="py-20 lg:py-32 bg-ivory">
-    <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
-      <div class="max-w-2xl mb-16 fade-up">
-        <div class="section-label">Руководство</div>
-        <h2 class="font-display text-4xl lg:text-5xl text-primary-900 font-light">
-          Руководители и <span class="italic text-primary-600">ключевые специалисты</span>
-        </h2>
-      </div>
-      <div id="leadership-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 fade-up"></div>
-    </div>
-  </section>
-
   <!-- Agents grid -->
   <section class="py-20 lg:py-32 bg-cream">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
@@ -937,6 +924,67 @@
             <div class="grid grid-cols-2 gap-2 mt-2">
               <input type="number" id="filter-price-min" placeholder="от" class="filter-input" />
               <input type="number" id="filter-price-max" placeholder="до" class="filter-input" />
+            </div>
+          </div>
+
+          <!-- Developer -->
+          <div>
+            <label class="filter-label" for="filter-developer">Застройщик</label>
+            <select id="filter-developer" class="filter-select">
+              <option value="">Любой застройщик</option>
+            </select>
+          </div>
+
+          <!-- Complex -->
+          <div>
+            <label class="filter-label" for="filter-complex">Жилой комплекс</label>
+            <select id="filter-complex" class="filter-select">
+              <option value="">Любой ЖК</option>
+            </select>
+          </div>
+
+          <!-- Class -->
+          <div>
+            <label class="filter-label" for="filter-class">Класс жилья</label>
+            <select id="filter-class" class="filter-select">
+              <option value="">Любой класс</option>
+              <option>Эконом</option>
+              <option>Комфорт</option>
+              <option>Бизнес</option>
+              <option>Премиум</option>
+              <option>Элит</option>
+            </select>
+          </div>
+
+          <!-- Building type -->
+          <div>
+            <label class="filter-label" for="filter-building-type">Тип дома</label>
+            <select id="filter-building-type" class="filter-select">
+              <option value="">Любой тип</option>
+              <option>Монолит</option>
+              <option>Монолитно-каркасный</option>
+              <option>Кирпичный</option>
+              <option>Панельный</option>
+              <option>Блочный</option>
+              <option>Деревянный</option>
+            </select>
+          </div>
+
+          <!-- Year -->
+          <div>
+            <label class="filter-label">Год постройки</label>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <input type="number" id="filter-year-min" placeholder="от" class="filter-input" />
+              <input type="number" id="filter-year-max" placeholder="до" class="filter-input" />
+            </div>
+          </div>
+
+          <!-- Floor range -->
+          <div>
+            <label class="filter-label">Этаж</label>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <input type="number" id="filter-floor-min" placeholder="от" class="filter-input" />
+              <input type="number" id="filter-floor-max" placeholder="до" class="filter-input" />
             </div>
           </div>
 

@@ -2,21 +2,31 @@
 import { api } from './api.js';
 
 let currentUser = null;
-let editingId   = null;        // null = создание, иначе id редактируемого
-let formData    = {};          // текущее состояние формы
+let editingId   = null;
+let formData    = {};
 let agentsList  = [];
+let developersCache = [];
+let complexesCache  = [];
 
-// ===== Главная функция — открывает форму как полноэкранный оверлей =====
+const HOUSING_CLASSES = ['Эконом', 'Комфорт', 'Бизнес', 'Премиум', 'Элит'];
+const BUILDING_TYPES  = ['Монолит', 'Монолитно-каркасный', 'Кирпичный', 'Панельный', 'Блочный', 'Деревянный'];
+
+// ===== Главная функция =====
 export async function openPropertyForm(user, id, onClose) {
   currentUser = user;
   editingId   = id || null;
 
-  // Сначала загружаем агентов (для селекта) и, если редактируем — сам объект
   try {
-    const agentsResp = await api.agents.list();
-    agentsList = agentsResp.agents || [];
+    const [agentsResp, devsResp, complexesResp] = await Promise.all([
+      api.agents.list(),
+      api.developers.list(),
+      api.complexes.list(),
+    ]);
+    agentsList       = agentsResp.agents || agentsResp.items || [];
+    developersCache  = devsResp.items || [];
+    complexesCache   = complexesResp.items || [];
   } catch (err) {
-    alert('Не удалось загрузить список агентов: ' + err.message);
+    alert('Не удалось загрузить справочники: ' + err.message);
     return;
   }
 
@@ -29,7 +39,6 @@ export async function openPropertyForm(user, id, onClose) {
       return;
     }
   } else {
-    // Дефолты для нового объекта
     formData = {
       title:         '',
       type:          'Квартира',
@@ -52,6 +61,10 @@ export async function openPropertyForm(user, id, onClose) {
       gallery:       [],
       top:           false,
       active:        true,
+      housingClass:         '',
+      buildingType:         '',
+      developerId:          null,
+      residentialComplexId: null,
       agentId:       currentUser.role === 'agent' && currentUser.agent
         ? currentUser.agent.id
         : (agentsList[0]?.id || ''),
@@ -67,7 +80,7 @@ function mapFromServer(p) {
     title:         p.title,
     type:          p.type,
     deal:          p.deal,
-    price:         p._priceNumeric || p.price.replace(/\s/g, ''),
+    price:         p._priceNumeric || String(p.price || '').replace(/\s/g, ''),
     district:      p.district,
     address:       p.address,
     sqm:           p.sqm,
@@ -85,13 +98,15 @@ function mapFromServer(p) {
     gallery:       p.gallery || [],
     top:           !!p.top,
     active:        p.active !== false,
+    housingClass:         p.housingClass || '',
+    buildingType:         p.buildingType || '',
+    developerId:          p.developerId          || null,
+    residentialComplexId: p.residentialComplexId || null,
     agentId:       p.agentId,
   };
 }
 
-// ===== Рендер =====
 function renderForm(onClose) {
-  // Удаляем предыдущий оверлей если есть
   document.getElementById('property-form-overlay')?.remove();
 
   const overlay = document.createElement('div');
@@ -99,7 +114,6 @@ function renderForm(onClose) {
   overlay.className = 'fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-stretch justify-end';
   overlay.innerHTML = formHTML();
 
-  // Закрытие по клику на затемнение
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) handleClose(onClose);
   });
@@ -107,7 +121,6 @@ function renderForm(onClose) {
   document.body.appendChild(overlay);
   document.body.style.overflow = 'hidden';
 
-  // Привязываем обработчики
   attachHandlers(onClose);
 }
 
@@ -116,6 +129,10 @@ function formHTML() {
   const districts = ['Есильский р-н', 'Алматинский р-н', 'Сарыаркинский р-н', 'Караоткель'];
   const types = ['Квартира', 'Новостройка', 'Дом', 'Коммерция'];
   const canChangeAgent = currentUser.role === 'admin';
+
+  // Текущие выбранные застройщик/ЖК (для отображения значений в селекторах)
+  const selectedDev     = developersCache.find(d => d.id === formData.developerId);
+  const selectedComplex = complexesCache.find(c => c.id === formData.residentialComplexId);
 
   return `
     <div class="bg-white w-full max-w-3xl h-screen overflow-y-auto shadow-2xl">
@@ -131,7 +148,6 @@ function formHTML() {
         </button>
       </div>
 
-      <!-- Form body -->
       <form id="property-form" class="p-8 space-y-8">
 
         <!-- 1. Основное -->
@@ -192,7 +208,35 @@ function formHTML() {
           </div>
         </section>
 
-        <!-- 2. Адрес и площадь -->
+        <!-- 2. Застройщик и ЖК -->
+        <section>
+          <h3 class="form-section-title">Застройщик и жилой комплекс</h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Застройщик</label>
+              <div class="combo-input-wrap">
+                <input id="dev-input" type="text" class="admin-input" placeholder="Начните вводить или оставьте пустым..."
+                  value="${esc(selectedDev ? selectedDev.name : '')}"
+                  data-id="${selectedDev ? selectedDev.id : ''}" autocomplete="off" />
+                <div id="dev-dropdown" class="combo-dropdown hidden"></div>
+              </div>
+              <div class="text-xs text-graphite/50 mt-1">Например: BI Group, BAZIS, Mega Astana</div>
+            </div>
+
+            <div>
+              <label class="form-label">Жилой комплекс</label>
+              <div class="combo-input-wrap">
+                <input id="complex-input" type="text" class="admin-input" placeholder="Начните вводить или оставьте пустым..."
+                  value="${esc(selectedComplex ? selectedComplex.name : '')}"
+                  data-id="${selectedComplex ? selectedComplex.id : ''}" autocomplete="off" />
+                <div id="complex-dropdown" class="combo-dropdown hidden"></div>
+              </div>
+              <div class="text-xs text-graphite/50 mt-1">Например: Astana Tower, Expo Village</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. Адрес и площадь -->
         <section>
           <h3 class="form-section-title">Адрес и площадь</h3>
           <div class="grid grid-cols-2 gap-4">
@@ -206,7 +250,7 @@ function formHTML() {
 
             <div>
               <label class="form-label">Адрес *</label>
-              <input name="address" required value="${esc(formData.address)}" class="admin-input" placeholder="ул. Достык, 5, ЖК «Астана Тауэрс»" />
+              <input name="address" required value="${esc(formData.address)}" class="admin-input" placeholder="ул. Достык, 5" />
             </div>
 
             <div>
@@ -237,7 +281,29 @@ function formHTML() {
           </div>
         </section>
 
-        <!-- 3. Характеристики -->
+        <!-- 4. Класс и тип дома -->
+        <section>
+          <h3 class="form-section-title">Класс жилья и материалы</h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="form-label">Класс жилья</label>
+              <select name="housingClass" class="admin-input">
+                <option value="">— не указан —</option>
+                ${HOUSING_CLASSES.map(c => `<option ${c === formData.housingClass ? 'selected' : ''}>${c}</option>`).join('')}
+              </select>
+            </div>
+
+            <div>
+              <label class="form-label">Тип дома</label>
+              <select name="buildingType" class="admin-input">
+                <option value="">— не указан —</option>
+                ${BUILDING_TYPES.map(t => `<option ${t === formData.buildingType ? 'selected' : ''}>${t}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. Характеристики -->
         <section>
           <h3 class="form-section-title">Характеристики</h3>
           <div class="grid grid-cols-2 gap-4">
@@ -268,36 +334,31 @@ function formHTML() {
           </div>
         </section>
 
-        <!-- 4. Описание -->
+        <!-- 6. Описание -->
         <section>
           <h3 class="form-section-title">Описание</h3>
-          <textarea name="description" required rows="6" class="admin-input" placeholder="Расскажите подробно об объекте: что в нём особенного, инфраструктура, причина продажи и т.д.">${esc(formData.description)}</textarea>
-          <div class="text-xs text-graphite/50 mt-1">Первое предложение станет подзаголовком на странице объекта.</div>
+          <textarea name="description" required rows="6" class="admin-input" placeholder="Расскажите подробно об объекте...">${esc(formData.description)}</textarea>
         </section>
 
-        <!-- 5. Особенности -->
+        <!-- 7. Особенности -->
         <section>
           <h3 class="form-section-title">Ключевые особенности</h3>
-          <div class="text-xs text-graphite/50 mb-3">Короткие фразы, которые отображаются как теги. Например: «Панорамный вид», «Мебель в подарок».</div>
-
+          <div class="text-xs text-graphite/50 mb-3">Например: «Панорамный вид», «Мебель в подарок».</div>
           <div id="features-list" class="flex flex-wrap gap-2 mb-3">
             ${formData.features.map(f => featureTagHTML(f)).join('')}
           </div>
-
           <div class="flex gap-2">
             <input id="feature-input" type="text" class="admin-input flex-1" placeholder="Добавить особенность и нажать Enter" />
             <button type="button" id="feature-add-btn" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium transition">Добавить</button>
           </div>
         </section>
 
-        <!-- 6. Фото -->
+        <!-- 8. Фото -->
         <section>
           <h3 class="form-section-title">Фотографии</h3>
           ${editingId ? `
             <div class="text-xs text-graphite/50 mb-3">Перетаскивайте превью, чтобы изменить порядок. Первое фото — главное.</div>
-
             <div id="gallery-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4"></div>
-
             <label class="block">
               <input id="photo-input" type="file" multiple accept="image/jpeg,image/jpg,image/png,image/webp" class="hidden" />
               <div class="border-2 border-dashed border-gray-300 hover:border-primary-500 rounded-lg p-8 text-center cursor-pointer transition">
@@ -313,10 +374,9 @@ function formHTML() {
             </div>
           `}
         </section>
-
       </form>
 
-      <!-- Footer (sticky) -->
+      <!-- Footer -->
       <div class="sticky bottom-0 bg-white border-t border-gray-200 px-8 py-4 flex items-center justify-between">
         <div id="form-error" class="text-sm text-red-600 hidden"></div>
         <div class="ml-auto flex gap-3">
@@ -352,57 +412,160 @@ function galleryThumbHTML(url) {
   `;
 }
 
+// ===== Combo (поиск с автодополнением) =====
+function setupCombo({ inputId, dropdownId, getItems, onSelect, onCreate, createLabel }) {
+  const input    = document.getElementById(inputId);
+  const dropdown = document.getElementById(dropdownId);
+  if (!input || !dropdown) return;
+
+  function rerender() {
+    const q = input.value.trim().toLowerCase();
+    const all = getItems();
+    const matches = q ? all.filter(i => i.name.toLowerCase().includes(q)) : all;
+
+    let html = '';
+    if (matches.length) {
+      html += matches.slice(0, 10).map(i => `
+        <div class="combo-item" data-id="${i.id}">${esc(i.name)}${i.developer ? `<span class="text-xs text-graphite/50 ml-2">${esc(i.developer.name)}</span>` : ''}</div>
+      `).join('');
+    } else {
+      html += `<div class="combo-item-empty">Ничего не найдено</div>`;
+    }
+
+    if (q && !all.some(i => i.name.toLowerCase() === q)) {
+      html += `<div class="combo-item combo-item-create" data-create="1"><span class="text-primary-700">+ ${createLabel}: «${esc(input.value.trim())}»</span></div>`;
+    }
+
+    dropdown.innerHTML = html;
+    dropdown.classList.remove('hidden');
+  }
+
+  input.addEventListener('focus', rerender);
+  input.addEventListener('input', rerender);
+
+  // Закрытие при клике вне
+  document.addEventListener('click', (e) => {
+    if (e.target !== input && !dropdown.contains(e.target)) {
+      dropdown.classList.add('hidden');
+    }
+  });
+
+  dropdown.addEventListener('click', async (e) => {
+    const item = e.target.closest('.combo-item');
+    if (!item) return;
+    if (item.dataset.create === '1') {
+      const name = input.value.trim();
+      if (!name) return;
+      try {
+        const created = await onCreate(name);
+        input.value = created.name;
+        input.dataset.id = created.id;
+        dropdown.classList.add('hidden');
+      } catch (err) {
+        alert('Ошибка: ' + err.message);
+      }
+    } else {
+      const id = item.dataset.id;
+      const found = getItems().find(i => String(i.id) === id);
+      if (found) {
+        input.value = found.name;
+        input.dataset.id = found.id;
+        if (onSelect) onSelect(found);
+      }
+      dropdown.classList.add('hidden');
+    }
+  });
+
+  // Если очистили инпут — сбрасываем выбор
+  input.addEventListener('blur', () => {
+    setTimeout(() => {
+      if (!input.value.trim()) {
+        input.dataset.id = '';
+      }
+    }, 200);
+  });
+}
+
 // ===== Обработчики =====
 function attachHandlers(onClose) {
   document.getElementById('form-close').addEventListener('click', () => handleClose(onClose));
   document.getElementById('form-cancel').addEventListener('click', () => handleClose(onClose));
   document.getElementById('form-submit').addEventListener('click', () => handleSubmit(onClose));
 
-  // Цена — форматируем по мере ввода
+  // Цена
   const priceInput = document.querySelector('[data-price-input]');
   if (priceInput) {
     priceInput.addEventListener('input', () => {
       const digits = priceInput.value.replace(/\D/g, '');
-      const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-      priceInput.value = formatted;
+      priceInput.value = digits.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
       updatePriceHint(digits);
     });
-    updatePriceHint(formData.price.toString());
+    updatePriceHint(String(formData.price || ''));
   }
 
   // Особенности
-  const featureInput = document.getElementById('feature-input');
-  const featureBtn = document.getElementById('feature-add-btn');
-  featureInput?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      addFeature();
-    }
+  document.getElementById('feature-input')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); addFeature(); }
   });
-  featureBtn?.addEventListener('click', addFeature);
-
+  document.getElementById('feature-add-btn')?.addEventListener('click', addFeature);
   document.getElementById('features-list').addEventListener('click', (e) => {
     const removeBtn = e.target.closest('.feature-remove');
     if (!removeBtn) return;
     const tag = removeBtn.closest('[data-feature]');
-    const text = tag.dataset.feature;
-    formData.features = formData.features.filter(f => f !== text);
+    formData.features = formData.features.filter(f => f !== tag.dataset.feature);
     tag.remove();
+  });
+
+  // Combo: застройщик
+  setupCombo({
+    inputId: 'dev-input',
+    dropdownId: 'dev-dropdown',
+    getItems: () => developersCache,
+    createLabel: 'Добавить застройщика',
+    onCreate: async (name) => {
+      const created = await api.developers.create(name);
+      developersCache.push({ id: created.id, name: created.name, propertiesCount: 0, complexesCount: 0 });
+      developersCache.sort((a, b) => a.name.localeCompare(b.name));
+      return created;
+    },
+    onSelect: () => {},
+  });
+
+  // Combo: ЖК
+  setupCombo({
+    inputId: 'complex-input',
+    dropdownId: 'complex-dropdown',
+    getItems: () => complexesCache,
+    createLabel: 'Добавить ЖК',
+    onCreate: async (name) => {
+      // Если выбран застройщик — привязываем ЖК к нему
+      const devInput = document.getElementById('dev-input');
+      const developerId = devInput && devInput.dataset.id ? parseInt(devInput.dataset.id, 10) : null;
+      const created = await api.complexes.create(name, developerId);
+      complexesCache.push({
+        id: created.id,
+        name: created.name,
+        developer: created.developer,
+        developerId: created.developerId,
+        propertiesCount: 0,
+      });
+      complexesCache.sort((a, b) => a.name.localeCompare(b.name));
+      return created;
+    },
+    onSelect: () => {},
   });
 
   // Фото — только в режиме редактирования
   if (editingId) {
     renderGallery();
-    const photoInput = document.getElementById('photo-input');
-    photoInput?.addEventListener('change', handlePhotoUpload);
+    document.getElementById('photo-input')?.addEventListener('change', handlePhotoUpload);
   }
 }
 
 function addFeature() {
   const input = document.getElementById('feature-input');
   const text = input.value.trim();
-  if (!text) return;
-  if (formData.features.includes(text)) {
+  if (!text || formData.features.includes(text)) {
     input.value = '';
     return;
   }
@@ -436,7 +599,6 @@ function renderGallery() {
   }
   grid.innerHTML = formData.gallery.map(galleryThumbHTML).join('');
 
-  // Drag & drop reorder
   let dragSrc = null;
   grid.querySelectorAll('[draggable]').forEach(el => {
     el.addEventListener('dragstart', () => { dragSrc = el; el.classList.add('opacity-50'); });
@@ -460,7 +622,6 @@ function renderGallery() {
     });
   });
 
-  // Удаление
   grid.querySelectorAll('.photo-delete').forEach(btn => {
     btn.addEventListener('click', async (e) => {
       e.stopPropagation();
@@ -480,11 +641,9 @@ function renderGallery() {
 async function handlePhotoUpload(e) {
   const files = [...e.target.files];
   if (files.length === 0) return;
-
   const status = document.getElementById('upload-status');
   status.classList.remove('hidden');
   status.textContent = `Загружаем ${files.length} фото...`;
-
   try {
     const res = await api.properties.uploadPhotos(editingId, files);
     formData.gallery = res.gallery;
@@ -495,7 +654,7 @@ async function handlePhotoUpload(e) {
     status.textContent = '❌ ' + err.message;
     status.classList.add('text-red-600');
   } finally {
-    e.target.value = '';   // позволит загрузить те же файлы снова если нужно
+    e.target.value = '';
   }
 }
 
@@ -503,6 +662,33 @@ async function handlePhotoUpload(e) {
 async function handleSubmit(onClose) {
   const form = document.getElementById('property-form');
   const fd = new FormData(form);
+
+  const devInput     = document.getElementById('dev-input');
+  const complexInput = document.getElementById('complex-input');
+
+  // Если в combo есть текст, но не выбран существующий и не нажата опция «создать» —
+  // создаём автоматически при сохранении
+  let developerId = devInput.dataset.id ? parseInt(devInput.dataset.id, 10) : null;
+  if (!developerId && devInput.value.trim()) {
+    try {
+      const created = await api.developers.create(devInput.value.trim());
+      developerId = created.id;
+    } catch (err) {
+      showError('Не удалось создать застройщика: ' + err.message);
+      return;
+    }
+  }
+
+  let residentialComplexId = complexInput.dataset.id ? parseInt(complexInput.dataset.id, 10) : null;
+  if (!residentialComplexId && complexInput.value.trim()) {
+    try {
+      const created = await api.complexes.create(complexInput.value.trim(), developerId);
+      residentialComplexId = created.id;
+    } catch (err) {
+      showError('Не удалось создать ЖК: ' + err.message);
+      return;
+    }
+  }
 
   const data = {
     title:         fd.get('title')?.trim(),
@@ -526,10 +712,11 @@ async function handleSubmit(onClose) {
     top:           fd.get('top') === 'on',
     active:        fd.get('active') === 'on',
     agentId:       fd.get('agentId'),
+    housingClass:  fd.get('housingClass') || null,
+    buildingType:  fd.get('buildingType') || null,
+    developerId,
+    residentialComplexId,
   };
-
-  const errBox = document.getElementById('form-error');
-  errBox.classList.add('hidden');
 
   const submitBtn = document.getElementById('form-submit');
   submitBtn.disabled = true;
@@ -540,19 +727,23 @@ async function handleSubmit(onClose) {
       await api.properties.update(editingId, data);
     } else {
       const created = await api.properties.create(data);
-      // Сразу переоткрываем форму на этот объект, чтобы дать загрузить фото
       handleClose(onClose);
       setTimeout(() => openPropertyForm(currentUser, created.id, onClose), 100);
       return;
     }
     handleClose(onClose);
   } catch (err) {
-    errBox.textContent = err.message;
-    errBox.classList.remove('hidden');
+    showError(err.message);
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = editingId ? 'Сохранить изменения' : 'Создать объект';
   }
+}
+
+function showError(msg) {
+  const errBox = document.getElementById('form-error');
+  errBox.textContent = msg;
+  errBox.classList.remove('hidden');
 }
 
 function handleClose(onClose) {
@@ -561,14 +752,9 @@ function handleClose(onClose) {
   if (onClose) onClose();
 }
 
-// ===== utils =====
 function esc(s) {
   if (s === null || s === undefined) return '';
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function formatPriceForInput(price) {

@@ -87,8 +87,14 @@ model Property {
   active         Boolean  @default(true)             // снят с продажи или нет
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  // НОВЫЕ ПОЛЯ
+  housingClass         String?  // Эконом / Комфорт / Бизнес / Премиум / Элит
+  buildingType         String?  // Монолит / Монолитно-каркасный / Кирпичный / ...
+  developerId          Int?
+  developer            Developer? @relation(fields: [developerId], references: [id])
+  residentialComplexId Int?
+  residentialComplex   ResidentialComplex? @relation(fields: [residentialComplexId], references: [id])
 
-  // Связи
   agentId        String
   agent          Agent    @relation(fields: [agentId], references: [id])
   leads          Lead[]
@@ -123,4 +129,31 @@ model Lead {
   @@index([createdAt])
   @@index([agentId])                           // ← для быстрого фильтра «заявки агента»
   @@map("leads")
+}
+// ===== ЗАСТРОЙЩИКИ =====
+model Developer {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  complexes  ResidentialComplex[]
+  properties Property[]
+
+  @@map("developers")
+}
+
+// ===== ЖИЛЫЕ КОМПЛЕКСЫ =====
+model ResidentialComplex {
+  id          Int      @id @default(autoincrement())
+  name        String
+  developerId Int?
+  developer   Developer? @relation(fields: [developerId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  properties  Property[]
+
+  @@unique([name, developerId])
+  @@map("residential_complexes")
 }

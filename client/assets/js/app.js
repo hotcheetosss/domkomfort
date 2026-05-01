@@ -5,7 +5,7 @@ import {
 } from './agents.js';
 import {
   loadProperties, renderProperties, initPropertyFilters, openProperty, switchGallery,
-  toggleAdvancedFilters, applyFilters, resetFilters,
+  toggleAdvancedFilters, applyFilters, resetFilters, showPlan,
 } from './properties.js';
 
 // ===== Navigation =====
@@ -82,6 +82,7 @@ window.handleForm = handleForm;
 window.openAgent = openAgent;
 window.openProperty = openProperty;
 window.switchGallery = switchGallery;
+window.showPlan = showPlan;
 window.toggleAdvancedFilters = toggleAdvancedFilters;
 window.applyFilters = applyFilters;
 window.resetFilters = resetFilters;

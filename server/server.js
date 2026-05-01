@@ -18,6 +18,10 @@ const adminPropertiesRouter = require('./routes/adminProperties');
 const adminAgentsRouter = require('./routes/adminAgents');
 const adminLeadsRouter = require('./routes/adminLeads');
 
+const developersRouter = require('./routes/developers');
+const complexesRouter = require('./routes/complexes');
+const publicReferencesRouter = require('./routes/publicReferences');
+
 // Security
 app.use(helmet({
   contentSecurityPolicy: false,
@@ -42,8 +46,11 @@ app.use('/api/auth', authRouter);
 app.use('/api/admin/properties', adminPropertiesRouter);
 app.use('/api/admin/agents',     adminAgentsRouter); 
 app.use('/api/admin/leads',      adminLeadsRouter);
+app.use('/api/admin/developers', developersRouter);
+app.use('/api/admin/complexes',  complexesRouter); 
 app.use('/api/properties', propertiesRouter);
 app.use('/api/agents', agentsRouter);
+app.use('/api', publicReferencesRouter);
 app.use('/api/leads', leadsRouter);
 
 // Статика: админка отдельно, публичный сайт отдельно

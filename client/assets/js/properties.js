@@ -1,25 +1,36 @@
-// Модуль объектов: загрузка каталога, фильтры, детальная страница.
 import { api } from './api.js';
 import { agents } from './agents.js';
 
 export let allProperties = [];
 let loaded = false;
+let referencesLoaded = false;
 
-// Состояние всех фильтров — одно место истины
 const filterState = {
-  category: 'all',        // из чипсов: all / Квартира / Новостройка / Дом / Коммерция / rent
-  rooms: 'any',           // any / '1' / '2' / '3' / '4+'
-  district: '',
-  priceMin: null,
-  priceMax: null,
-  sqmMin: null,
-  sqmMax: null,
-  sort: 'default',
+  category:     'all',
+  rooms:        'any',
+  district:     '',
+  priceMin:     null,
+  priceMax:     null,
+  sqmMin:       null,
+  sqmMax:       null,
+  developerId:  '',
+  complexId:    '',
+  housingClass: '',
+  buildingType: '',
+  yearMin:      null,
+  yearMax:      null,
+  floorMin:     null,
+  floorMax:     null,
+  sort:         'default',
 };
 
-// Парсим "93 400 000" -> 93400000
 function parsePrice(str) {
   return parseInt(String(str).replace(/\s/g, ''), 10) || 0;
+}
+
+function escapeHtml(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 export async function loadProperties() {
@@ -33,16 +44,63 @@ export async function loadProperties() {
   }
 }
 
+async function loadReferences() {
+  if (referencesLoaded) return;
+  try {
+    const [devs, complexes] = await Promise.all([
+      api.references.developers(),
+      api.references.complexes(),
+    ]);
+    populateDevelopers(devs.items || []);
+    populateComplexes(complexes.items || []);
+    referencesLoaded = true;
+  } catch (e) {
+    console.error('Не удалось загрузить справочники:', e);
+  }
+}
+
+function populateDevelopers(items) {
+  const sel = document.getElementById('filter-developer');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Любой застройщик</option>' +
+    items.map(d => `<option value="${d.id}">${escapeHtml(d.name)}</option>`).join('');
+}
+
+function populateComplexes(items, developerId = '') {
+  const sel = document.getElementById('filter-complex');
+  if (!sel) return;
+  const filtered = developerId
+    ? items.filter(c => String(c.developerId) === String(developerId))
+    : items;
+  // Только название ЖК, без приписки застройщика
+  sel.innerHTML = '<option value="">Любой ЖК</option>' +
+    filtered.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+}
+
+async function refreshComplexesList(developerId) {
+  try {
+    const resp = await api.references.complexes(developerId || undefined);
+    populateComplexes(resp.items || [], '');
+  } catch (e) {
+    console.error('Не удалось загрузить ЖК:', e);
+  }
+}
+
 export function propCardHTML(p) {
+  const complexBadge = p.residentialComplex
+    ? `<div class="text-[11px] text-primary-700 font-medium mb-1">${escapeHtml(p.residentialComplex.name)}</div>`
+    : '';
+
   return `
     <a href="#" onclick="openProperty('${p.id}'); return false;" class="premium-card overflow-hidden group block fade-up">
       <div class="aspect-[4/3] overflow-hidden relative">
-        <img src="${p.gallery[0]}" alt="${p.title}" class="w-full h-full object-cover prop-img"/>
+        <img src="${(p.gallery && p.gallery[0]) || 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80'}" alt="${p.title}" class="w-full h-full object-cover prop-img"/>
         ${p.top ? '<div class="absolute top-4 left-4 krisha-badge text-primary-900 text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full font-semibold">TOP</div>' : ''}
         ${p.deal === 'rent' ? '<div class="absolute top-4 right-4 bg-primary-600 text-white text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full font-medium">Аренда</div>' : ''}
         <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur text-primary-900 text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full font-semibold">${p.type}</div>
       </div>
       <div class="p-6">
+        ${complexBadge}
         <div class="text-xs uppercase tracking-[0.15em] text-graphite/50 mb-2">${p.district} · ${p.sqm} м² · ${p.floor ? p.floor + '/' + p.totalFloors : p.totalFloors + ' эт.'}</div>
         <h3 class="font-display text-xl text-primary-900 font-medium leading-tight mb-4">${p.title}</h3>
         <div class="flex items-end justify-between pt-4 border-t border-primary-900/5">
@@ -67,14 +125,12 @@ export function renderProperties() {
 
   let filtered = [...allProperties];
 
-  // 1. Категория (чипсы)
   if (filterState.category === 'rent') {
     filtered = filtered.filter(p => p.deal === 'rent');
   } else if (filterState.category !== 'all') {
     filtered = filtered.filter(p => p.type === filterState.category);
   }
 
-  // 2. Комнаты
   if (filterState.rooms !== 'any') {
     if (filterState.rooms === '4+') {
       filtered = filtered.filter(p => p.rooms >= 4);
@@ -83,12 +139,10 @@ export function renderProperties() {
     }
   }
 
-  // 3. Район
   if (filterState.district) {
     filtered = filtered.filter(p => p.district === filterState.district);
   }
 
-  // 4. Цена
   if (filterState.priceMin !== null) {
     filtered = filtered.filter(p => parsePrice(p.price) >= filterState.priceMin);
   }
@@ -96,15 +150,31 @@ export function renderProperties() {
     filtered = filtered.filter(p => parsePrice(p.price) <= filterState.priceMax);
   }
 
-  // 5. Площадь
-  if (filterState.sqmMin !== null) {
-    filtered = filtered.filter(p => p.sqm >= filterState.sqmMin);
-  }
-  if (filterState.sqmMax !== null) {
-    filtered = filtered.filter(p => p.sqm <= filterState.sqmMax);
+  if (filterState.sqmMin !== null) filtered = filtered.filter(p => p.sqm >= filterState.sqmMin);
+  if (filterState.sqmMax !== null) filtered = filtered.filter(p => p.sqm <= filterState.sqmMax);
+
+  if (filterState.developerId) {
+    filtered = filtered.filter(p => String(p.developerId) === String(filterState.developerId));
   }
 
-  // 6. Сортировка
+  if (filterState.complexId) {
+    filtered = filtered.filter(p => String(p.residentialComplexId) === String(filterState.complexId));
+  }
+
+  if (filterState.housingClass) {
+    filtered = filtered.filter(p => p.housingClass === filterState.housingClass);
+  }
+
+  if (filterState.buildingType) {
+    filtered = filtered.filter(p => p.buildingType === filterState.buildingType);
+  }
+
+  if (filterState.yearMin !== null) filtered = filtered.filter(p => (p.year || 0) >= filterState.yearMin);
+  if (filterState.yearMax !== null) filtered = filtered.filter(p => (p.year || 0) <= filterState.yearMax);
+
+  if (filterState.floorMin !== null) filtered = filtered.filter(p => (p.floor || 0) >= filterState.floorMin);
+  if (filterState.floorMax !== null) filtered = filtered.filter(p => (p.floor || 9999) <= filterState.floorMax);
+
   switch (filterState.sort) {
     case 'price-asc':  filtered.sort((a, b) => parsePrice(a.price) - parsePrice(b.price)); break;
     case 'price-desc': filtered.sort((a, b) => parsePrice(b.price) - parsePrice(a.price)); break;
@@ -146,6 +216,10 @@ function updateResetButton() {
     !filterState.district &&
     filterState.priceMin === null && filterState.priceMax === null &&
     filterState.sqmMin === null && filterState.sqmMax === null &&
+    !filterState.developerId && !filterState.complexId &&
+    !filterState.housingClass && !filterState.buildingType &&
+    filterState.yearMin === null && filterState.yearMax === null &&
+    filterState.floorMin === null && filterState.floorMax === null &&
     filterState.sort === 'default'
   );
   reset.classList.toggle('hidden', isDefault);
@@ -156,7 +230,8 @@ export function initPropertyFilters() {
   if (!bar || bar.dataset.init) return;
   bar.dataset.init = '1';
 
-  // Чипсы-категории
+  loadReferences();
+
   bar.querySelectorAll('.filter-chip').forEach(btn => {
     btn.addEventListener('click', () => {
       filterState.category = btn.dataset.filter;
@@ -164,7 +239,6 @@ export function initPropertyFilters() {
     });
   });
 
-  // Чипсы «комнаты»
   document.querySelectorAll('#filter-rooms .mini-chip').forEach(btn => {
     btn.addEventListener('click', () => {
       filterState.rooms = btn.dataset.rooms;
@@ -181,11 +255,34 @@ export function initPropertyFilters() {
     renderProperties();
   });
 
+  document.getElementById('filter-developer')?.addEventListener('change', async (e) => {
+    filterState.developerId = e.target.value;
+    filterState.complexId = '';
+    await refreshComplexesList(filterState.developerId);
+    renderProperties();
+  });
+  document.getElementById('filter-complex')?.addEventListener('change', e => {
+    filterState.complexId = e.target.value;
+    renderProperties();
+  });
+  document.getElementById('filter-class')?.addEventListener('change', e => {
+    filterState.housingClass = e.target.value;
+    renderProperties();
+  });
+  document.getElementById('filter-building-type')?.addEventListener('change', e => {
+    filterState.buildingType = e.target.value;
+    renderProperties();
+  });
+
   const numericInputs = [
     ['filter-price-min', 'priceMin'],
     ['filter-price-max', 'priceMax'],
     ['filter-sqm-min',   'sqmMin'],
     ['filter-sqm-max',   'sqmMax'],
+    ['filter-year-min',  'yearMin'],
+    ['filter-year-max',  'yearMax'],
+    ['filter-floor-min', 'floorMin'],
+    ['filter-floor-max', 'floorMax'],
   ];
   numericInputs.forEach(([id, key]) => {
     const el = document.getElementById(id);
@@ -214,21 +311,21 @@ export function applyFilters() {
 }
 
 export function resetFilters() {
-  filterState.category = 'all';
-  filterState.rooms = 'any';
-  filterState.district = '';
-  filterState.priceMin = null;
-  filterState.priceMax = null;
-  filterState.sqmMin = null;
-  filterState.sqmMax = null;
-  filterState.sort = 'default';
-
-  ['filter-price-min', 'filter-price-max', 'filter-sqm-min', 'filter-sqm-max'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
+  Object.keys(filterState).forEach(k => {
+    if (k === 'category') filterState[k] = 'all';
+    else if (k === 'rooms') filterState[k] = 'any';
+    else if (k === 'sort') filterState[k] = 'default';
+    else if (typeof filterState[k] === 'number') filterState[k] = null;
+    else filterState[k] = '';
   });
-  const dist = document.getElementById('filter-district');
-  if (dist) dist.value = '';
+
+  ['filter-price-min','filter-price-max','filter-sqm-min','filter-sqm-max',
+   'filter-year-min','filter-year-max','filter-floor-min','filter-floor-max']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+
+  ['filter-district','filter-developer','filter-complex','filter-class','filter-building-type']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+
   const sort = document.getElementById('filter-sort');
   if (sort) sort.value = 'default';
 
@@ -243,6 +340,19 @@ export function openProperty(id) {
     .filter(x => x.id !== p.id && (x.type === p.type || x.district === p.district))
     .slice(0, 3);
 
+  const complexInfo = p.residentialComplex
+    ? `<div class="spec-row"><span class="spec-label">ЖК</span><span class="spec-value">${escapeHtml(p.residentialComplex.name)}</span></div>`
+    : '';
+  const developerInfo = p.developer
+    ? `<div class="spec-row"><span class="spec-label">Застройщик</span><span class="spec-value">${escapeHtml(p.developer.name)}</span></div>`
+    : '';
+  const housingClassInfo = p.housingClass
+    ? `<div class="spec-row"><span class="spec-label">Класс жилья</span><span class="spec-value">${escapeHtml(p.housingClass)}</span></div>`
+    : '';
+  const buildingTypeInfo = p.buildingType
+    ? `<div class="spec-row"><span class="spec-label">Тип дома</span><span class="spec-value">${escapeHtml(p.buildingType)}</span></div>`
+    : '';
+
   const container = document.getElementById('property-detail-content');
   container.innerHTML = `
     <section class="pb-16 bg-ivory">
@@ -255,10 +365,16 @@ export function openProperty(id) {
                 ${p.top ? '<div class="krisha-badge text-primary-900 text-xs uppercase tracking-[0.15em] px-4 py-2 rounded-full font-semibold">TOP Krisha</div>' : ''}
                 ${p.deal === 'rent' ? '<div class="bg-primary-600 text-white text-xs uppercase tracking-[0.15em] px-4 py-2 rounded-full font-medium">Аренда</div>' : ''}
                 <div class="bg-white/95 backdrop-blur text-primary-900 text-xs uppercase tracking-[0.15em] px-4 py-2 rounded-full font-semibold">${p.type}</div>
+                ${(p.gallery && p.gallery.length > 1) ? `
+                  <button onclick="showPlan()" class="bg-primary-700 hover:bg-primary-800 text-white text-xs uppercase tracking-[0.15em] px-4 py-2 rounded-full font-semibold transition flex items-center gap-1.5">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                    Планировка
+                  </button>
+                ` : ''}
               </div>
             </div>
-            <div class="grid grid-cols-${Math.min(p.gallery.length, 5)} gap-3">
-              ${p.gallery.map((img, i) => `
+            <div class="grid grid-cols-${Math.min((p.gallery || []).length || 1, 5)} gap-3">
+              ${(p.gallery || []).map((img, i) => `
                 <div class="aspect-[4/3] overflow-hidden rounded gallery-thumb ${i === 0 ? 'active' : ''}" onclick="switchGallery(this, '${img}')">
                   <img src="${img}" alt="" class="w-full h-full object-cover"/>
                 </div>
@@ -266,13 +382,13 @@ export function openProperty(id) {
             </div>
           </div>
           <div class="lg:sticky lg:top-32 self-start">
-            <div class="text-xs uppercase tracking-[0.25em] text-primary-600 mb-3">${p.district}</div>
+            ${p.residentialComplex ? `<div class="text-xs uppercase tracking-[0.25em] text-primary-600 mb-2">ЖК «${escapeHtml(p.residentialComplex.name)}»</div>` : `<div class="text-xs uppercase tracking-[0.25em] text-primary-600 mb-3">${p.district}</div>`}
             <h1 class="font-display text-3xl lg:text-5xl text-primary-900 font-light leading-[1.05] mb-6">${p.title}</h1>
             <div class="flex items-baseline gap-2 mb-4">
               <span class="font-display text-5xl text-primary-700 font-medium">${p.price}</span>
               <span class="font-display text-2xl text-primary-700">₸${p.deal === 'rent' ? '/мес' : ''}</span>
             </div>
-            ${p.deal !== 'rent' ? `<div class="text-sm text-graphite/50 mb-8">≈ ${Math.round(parseInt(p.price.replace(/\s/g, '')) / p.sqm).toLocaleString('ru-RU')} ₸ за м²</div>` : '<div class="mb-8"></div>'}
+            ${p.deal !== 'rent' ? `<div class="text-sm text-graphite/50 mb-8">≈ ${Math.round(parseInt(String(p.price).replace(/\s/g, '')) / p.sqm).toLocaleString('ru-RU')} ₸ за м²</div>` : '<div class="mb-8"></div>'}
 
             <div class="grid grid-cols-3 gap-4 mb-8 pb-8 border-b border-primary-900/10">
               <div>
@@ -296,7 +412,6 @@ export function openProperty(id) {
 
             <div class="flex flex-col gap-3">
               <a href="https://wa.me/${(agent && agent.phone ? agent.phone : '77085050826').replace(/[^0-9]/g,'')}?text=${encodeURIComponent('Здравствуйте! Интересует объект: ' + p.title + ' (' + p.price + ' ₸)')}" target="_blank" class="btn-wa justify-center">Написать в WhatsApp</a>
-              <a href="tel:${(agent && agent.phone ? agent.phone : '+77085050826')}" class="btn-primary justify-center">Записаться на просмотр</a>
             </div>
           </div>
         </div>
@@ -309,24 +424,30 @@ export function openProperty(id) {
           <div class="section-label">Об объекте</div>
           <h2 class="font-display text-3xl lg:text-4xl text-primary-900 font-light leading-[1.15] mb-8">${p.description.split('.')[0]}.</h2>
           <p class="text-graphite/75 font-light leading-relaxed text-lg mb-10">${p.description}</p>
-          <div class="text-xs uppercase tracking-[0.2em] text-primary-600 mb-4">Ключевые особенности</div>
-          <div class="flex flex-wrap gap-2">
-            ${p.features.map(f => `<span class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-primary-900/10 rounded-full text-sm text-graphite"><span class="w-1.5 h-1.5 rounded-full bg-primary-600"></span>${f}</span>`).join('')}
-          </div>
+          ${(p.features && p.features.length) ? `
+            <div class="text-xs uppercase tracking-[0.2em] text-primary-600 mb-4">Ключевые особенности</div>
+            <div class="flex flex-wrap gap-2">
+              ${p.features.map(f => `<span class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-primary-900/10 rounded-full text-sm text-graphite"><span class="w-1.5 h-1.5 rounded-full bg-primary-600"></span>${f}</span>`).join('')}
+            </div>
+          ` : ''}
         </div>
         <div class="bg-white rounded-lg p-8 premium-card self-start">
           <div class="text-xs uppercase tracking-[0.2em] text-primary-600 mb-6">Характеристики</div>
           <div>
             <div class="spec-row"><span class="spec-label">Тип</span><span class="spec-value">${p.type}</span></div>
+            ${complexInfo}
+            ${developerInfo}
+            ${housingClassInfo}
+            ${buildingTypeInfo}
             <div class="spec-row"><span class="spec-label">Площадь</span><span class="spec-value">${p.sqm} м²</span></div>
             ${p.rooms ? `<div class="spec-row"><span class="spec-label">Комнат</span><span class="spec-value">${p.rooms}</span></div>` : ''}
             ${p.floor ? `<div class="spec-row"><span class="spec-label">Этаж</span><span class="spec-value">${p.floor} из ${p.totalFloors}</span></div>` : `<div class="spec-row"><span class="spec-label">Этажность</span><span class="spec-value">${p.totalFloors} эт.</span></div>`}
             <div class="spec-row"><span class="spec-label">Год постройки</span><span class="spec-value">${p.year}</span></div>
-            <div class="spec-row"><span class="spec-label">Высота потолков</span><span class="spec-value">${p.ceilingHeight} м</span></div>
-            <div class="spec-row"><span class="spec-label">Санузел</span><span class="spec-value">${p.bathroom}</span></div>
-            <div class="spec-row"><span class="spec-label">Состояние</span><span class="spec-value">${p.condition}</span></div>
-            <div class="spec-row"><span class="spec-label">Паркинг</span><span class="spec-value">${p.parking}</span></div>
-            <div class="spec-row"><span class="spec-label">Балкон</span><span class="spec-value">${p.balcony}</span></div>
+            ${p.ceilingHeight ? `<div class="spec-row"><span class="spec-label">Высота потолков</span><span class="spec-value">${p.ceilingHeight} м</span></div>` : ''}
+            ${p.bathroom ? `<div class="spec-row"><span class="spec-label">Санузел</span><span class="spec-value">${p.bathroom}</span></div>` : ''}
+            ${p.condition ? `<div class="spec-row"><span class="spec-label">Состояние</span><span class="spec-value">${p.condition}</span></div>` : ''}
+            ${p.parking ? `<div class="spec-row"><span class="spec-label">Паркинг</span><span class="spec-value">${p.parking}</span></div>` : ''}
+            ${p.balcony ? `<div class="spec-row"><span class="spec-label">Балкон</span><span class="spec-value">${p.balcony}</span></div>` : ''}
             <div class="spec-row"><span class="spec-label">Район</span><span class="spec-value">${p.district}</span></div>
           </div>
         </div>
@@ -347,7 +468,7 @@ export function openProperty(id) {
               <div class="text-white/60 text-sm mt-1">${agent.role}</div>
             </div>
           </div>
-          <div class="text-white/70 font-light max-w-lg">${agent.specialization}. Ведёт ${agent.listings} активных объектов. На связи 24/7.</div>
+          <div class="text-white/70 font-light max-w-lg">${agent.specialization}. На связи 24/7.</div>
           <div class="flex gap-3">
             <a href="#" onclick="openAgent('${agent.id}'); return false;" class="btn-ghost" style="color:#fff;border-color:rgba(255,255,255,0.25)">Профиль агента</a>
           </div>
@@ -376,4 +497,14 @@ export function switchGallery(thumb, src) {
   document.getElementById('gallery-main').src = src;
   document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
   thumb.classList.add('active');
+}
+
+export function showPlan() {
+  const thumbs = document.querySelectorAll('.gallery-thumb');
+  if (thumbs.length === 0) return;
+  const lastThumb = thumbs[thumbs.length - 1];
+  const lastImg = lastThumb.querySelector('img');
+  if (!lastImg) return;
+  switchGallery(lastThumb, lastImg.src);
+  document.getElementById('gallery-main')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }

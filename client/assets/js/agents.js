@@ -25,12 +25,14 @@ export async function loadAgentsData() {
 
 // Безопасное приведение полей агента к нужным типам
 function safeAgent(a) {
+  const agentListings = properties[a.id] ? properties[a.id].length : 0;
+
   return {
     id:             a.id || '',
     name:           a.name || 'Без имени',
     role:           a.role || 'Агент',
     specialization: a.specialization || 'Не указана',
-    listings:       a.listings || 0,
+    listings:       agentListings || a.listings || 0,
     phone:          a.phone || '',
     img:            a.img || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80',
     awards:         Array.isArray(a.awards) ? a.awards : [],
@@ -169,7 +171,6 @@ export function openAgent(id) {
             </div>
             <div class="flex flex-wrap gap-4">
               <a href="https://wa.me/${a.phone.replace(/[^0-9]/g, '')}" target="_blank" class="btn-wa">WhatsApp</a>
-              <a href="tel:${a.phone}" class="btn-ghost" style="color:#fff;border-color:rgba(255,255,255,0.3)">Позвонить</a>
             </div>
           </div>
         </div>
