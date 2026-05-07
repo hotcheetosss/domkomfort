@@ -9,8 +9,30 @@ let developersCache = [];
 let complexesCache  = [];
 
 const HOUSING_CLASSES = ['Эконом', 'Комфорт', 'Бизнес', 'Премиум', 'Элит'];
+const LABEL_COLORS = [
+  { value: 'blue',   name: 'Синий',      bg: '#3B82F6', text: '#FFFFFF' },
+  { value: 'yellow', name: 'Жёлтый',     bg: '#FACC15', text: '#1F2937' },
+  { value: 'red',    name: 'Красный',    bg: '#EF4444', text: '#FFFFFF' },
+  { value: 'green',  name: 'Зелёный',    bg: '#22C55E', text: '#FFFFFF' },
+  { value: 'purple', name: 'Фиолетовый', bg: '#A855F7', text: '#FFFFFF' },
+  { value: 'gray',   name: 'Серый',      bg: '#6B7280', text: '#FFFFFF' },
+];
 const BUILDING_TYPES  = ['Монолит', 'Монолитно-каркасный', 'Кирпичный', 'Панельный', 'Блочный', 'Деревянный'];
+const CONDITIONS = [
+  'Без отделки',
+  'Черновая отделка',
+  'Предчистовая отделка',
+  'Косметический ремонт',
+  'Хороший ремонт',
+  'Дизайнерский ремонт',
+  'Свободная планировка',
+];
 
+const PAYMENT_TYPES = [
+  { value: 'any',      label: 'Любой (наличные или ипотека)' },
+  { value: 'cash',     label: 'Только наличные' },
+  { value: 'mortgage', label: 'Только ипотека' },
+];
 // ===== Главная функция =====
 export async function openPropertyForm(user, id, onClose) {
   currentUser = user;
@@ -54,6 +76,7 @@ export async function openPropertyForm(user, id, onClose) {
       ceilingHeight: '',
       bathroom:      '',
       condition:     '',
+      paymentType:   '',
       parking:       '',
       balcony:       '',
       description:   '',
@@ -63,6 +86,7 @@ export async function openPropertyForm(user, id, onClose) {
       active:        true,
       housingClass:         '',
       buildingType:         '',
+      customLabels:         [],
       developerId:          null,
       residentialComplexId: null,
       agentId:       currentUser.role === 'agent' && currentUser.agent
@@ -91,6 +115,7 @@ function mapFromServer(p) {
     ceilingHeight: p.ceilingHeight || '',
     bathroom:      p.bathroom || '',
     condition:     p.condition || '',
+    paymentType:   p.paymentType || '',
     parking:       p.parking || '',
     balcony:       p.balcony || '',
     description:   p.description,
@@ -100,6 +125,7 @@ function mapFromServer(p) {
     active:        p.active !== false,
     housingClass:         p.housingClass || '',
     buildingType:         p.buildingType || '',
+    customLabels:         Array.isArray(p.customLabels) ? p.customLabels : [],
     developerId:          p.developerId          || null,
     residentialComplexId: p.residentialComplexId || null,
     agentId:       p.agentId,
@@ -316,10 +342,19 @@ function formHTML() {
               <label class="form-label">Санузел</label>
               <input name="bathroom" value="${esc(formData.bathroom)}" class="admin-input" placeholder="2 с/у" />
             </div>
-
             <div>
               <label class="form-label">Состояние</label>
-              <input name="condition" value="${esc(formData.condition)}" class="admin-input" placeholder="Авторский ремонт" />
+              <select name="condition" class="admin-input">
+                <option value="">— не указано —</option>
+                ${CONDITIONS.map(c => `<option ${c === formData.condition ? 'selected' : ''}>${c}</option>`).join('')}
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Вид оплаты</label>
+              <select name="paymentType" class="admin-input">
+                <option value="">— не указано —</option>
+                ${PAYMENT_TYPES.map(pt => `<option value="${pt.value}" ${pt.value === formData.paymentType ? 'selected' : ''}>${pt.label}</option>`).join('')}
+              </select>
             </div>
 
             <div>
@@ -332,6 +367,14 @@ function formHTML() {
               <input name="balcony" value="${esc(formData.balcony)}" class="admin-input" placeholder="Лоджия, 6 м²" />
             </div>
           </div>
+        </section>
+
+        <!-- Кастомные лейблы -->
+        <section>
+          <h3 class="form-section-title">Лейблы на карточке</h3>
+          <div class="text-xs text-graphite/50 mb-3">До 2 цветных бейджиков, которые показываются на фото объекта в каталоге. Например: «Готовый дом», «Комиссия 0%», «Срочно».</div>
+          <div id="custom-labels-list" class="space-y-3"></div>
+          <button type="button" id="add-label-btn" class="mt-3 text-sm text-primary-700 hover:text-primary-800 font-medium">+ Добавить лейбл</button>
         </section>
 
         <!-- 6. Описание -->
@@ -501,6 +544,16 @@ function attachHandlers(onClose) {
       updatePriceHint(digits);
     });
     updatePriceHint(String(formData.price || ''));
+    // Кастомные лейблы
+  renderLabels();
+  document.getElementById('add-label-btn')?.addEventListener('click', () => {
+    if (formData.customLabels.length >= 2) {
+      alert('Максимум 2 лейбла');
+      return;
+    }
+    formData.customLabels.push({ text: '', color: 'blue' });
+    renderLabels();
+  });
   }
 
   // Особенности
@@ -573,6 +626,59 @@ function addFeature() {
   document.getElementById('features-list').insertAdjacentHTML('beforeend', featureTagHTML(text));
   input.value = '';
   input.focus();
+}
+function renderLabels() {
+  const list = document.getElementById('custom-labels-list');
+  if (!list) return;
+
+  if (formData.customLabels.length === 0) {
+    list.innerHTML = '<div class="text-xs text-graphite/40 italic py-2">Лейблов пока нет</div>';
+    return;
+  }
+
+  list.innerHTML = formData.customLabels.map((label, idx) => {
+    const color = LABEL_COLORS.find(c => c.value === label.color) || LABEL_COLORS[0];
+    return `
+      <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider" style="background:${color.bg};color:${color.text}">
+          ${esc(label.text || 'Превью')}
+        </span>
+        <input type="text" value="${esc(label.text)}" maxlength="30" placeholder="Текст лейбла" class="flex-1 admin-input" data-label-text="${idx}" />
+        <select class="admin-input w-40" data-label-color="${idx}">
+          ${LABEL_COLORS.map(c => `<option value="${c.value}" ${c.value === label.color ? 'selected' : ''}>${c.name}</option>`).join('')}
+        </select>
+        <button type="button" class="p-2 text-red-600 hover:bg-red-50 rounded transition" data-label-remove="${idx}" title="Удалить">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        </button>
+      </div>
+    `;
+  }).join('');
+
+  list.querySelectorAll('[data-label-text]').forEach(input => {
+    input.addEventListener('input', e => {
+      const idx = parseInt(e.target.dataset.labelText, 10);
+      formData.customLabels[idx].text = e.target.value;
+      // обновим только превью, не перерисовывая всё (чтобы фокус не терялся)
+      const tag = e.target.previousElementSibling;
+      if (tag) tag.textContent = e.target.value || 'Превью';
+    });
+  });
+
+  list.querySelectorAll('[data-label-color]').forEach(sel => {
+    sel.addEventListener('change', e => {
+      const idx = parseInt(e.target.dataset.labelColor, 10);
+      formData.customLabels[idx].color = e.target.value;
+      renderLabels();
+    });
+  });
+
+  list.querySelectorAll('[data-label-remove]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const idx = parseInt(e.currentTarget.dataset.labelRemove, 10);
+      formData.customLabels.splice(idx, 1);
+      renderLabels();
+    });
+  });
 }
 
 function updatePriceHint(digits) {
@@ -704,7 +810,8 @@ async function handleSubmit(onClose) {
     year:          fd.get('year'),
     ceilingHeight: fd.get('ceilingHeight') || null,
     bathroom:      fd.get('bathroom')?.trim() || null,
-    condition:     fd.get('condition')?.trim() || null,
+    condition:     fd.get('condition') || null,
+    paymentType:   fd.get('paymentType') || null,
     parking:       fd.get('parking')?.trim() || null,
     balcony:       fd.get('balcony')?.trim() || null,
     description:   fd.get('description')?.trim(),
@@ -714,6 +821,7 @@ async function handleSubmit(onClose) {
     agentId:       fd.get('agentId'),
     housingClass:  fd.get('housingClass') || null,
     buildingType:  fd.get('buildingType') || null,
+    customLabels:  formData.customLabels.filter(l => l.text && l.text.trim()),
     developerId,
     residentialComplexId,
   };

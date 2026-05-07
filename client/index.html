@@ -129,7 +129,7 @@
       <div class="max-w-3xl">
         <div class="flex items-center gap-3 mb-8 fade-up">
           <span class="w-12 h-[1px] bg-white/50"></span>
-          <span class="text-white/80 uppercase tracking-[0.3em] text-xs font-medium">Астана · с 2021</span>
+          <span class="text-white/80 uppercase tracking-[0.3em] text-xs font-medium">Астана · с 2022</span>
         </div>
 
         <h1 class="font-display text-white text-[clamp(3rem,7vw,6.5rem)] leading-[0.95] font-light mb-8 fade-up" style="transition-delay: 0.1s">
@@ -726,7 +726,7 @@
               </div>
               <div>
                 <div class="text-xs uppercase tracking-[0.2em] text-graphite/50 mb-1">Режим работы</div>
-                <div class="font-display text-2xl text-primary-900 font-medium">Ежедневно · 09:00—21:00</div>
+                <div class="font-display text-2xl text-primary-900 font-medium">Ежедневно · 10:00—19:00</div>
               </div>
             </div>
           </div>
@@ -799,13 +799,39 @@
   </section>
 
   <!-- Agents grid -->
+   <!-- Top agents of the month (hidden if no top agents) -->
+  <section id="top-agents-section" class="hidden py-20 lg:py-28 bg-gradient-to-b from-primary-50 to-cream relative overflow-hidden">
+    <div class="absolute top-10 right-10 w-96 h-96 bg-gold/5 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-10 left-10 w-96 h-96 bg-primary-200/20 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-10 relative">
+      <div class="flex items-end justify-between mb-12 flex-wrap gap-6 fade-up">
+        <div>
+          <div class="inline-flex items-center gap-3 mb-3">
+            <span class="text-amber-500 text-2xl">⭐</span>
+            <span class="text-xs uppercase tracking-[0.3em] text-amber-700 font-semibold">TOP месяца</span>
+          </div>
+          <h2 class="font-display text-4xl lg:text-5xl text-primary-900 font-light leading-[1.05]">
+            Лучшие агенты <span class="italic text-primary-600">этого месяца</span>
+          </h2>
+          <p class="text-graphite/60 mt-3 max-w-xl">
+            Эти агенты показали лучшие результаты — рекомендуем обращаться к ним в первую очередь.
+          </p>
+        </div>
+      </div>
+
+      <div id="top-agents-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+    </div>
+  </section>
+
+  <!-- All agents grid -->
   <section class="py-20 lg:py-32 bg-cream">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
       <div class="flex items-end justify-between mb-12 flex-wrap gap-6 fade-up">
         <div>
-          <div class="section-label">Агенты</div>
+          <div class="section-label">Команда</div>
           <h2 class="font-display text-4xl lg:text-5xl text-primary-900 font-light">
-            Топ-агенты и <span class="italic text-primary-600">эксперты рынка</span>
+            Все <span class="italic text-primary-600">агенты агентства</span>
           </h2>
         </div>
         <div class="flex items-center gap-2">
@@ -818,7 +844,6 @@
       <div id="agents-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
     </div>
   </section>
-</main>
 
 <!-- =================================================================== -->
 <!-- ========================= AGENT DETAIL PAGE ========================= -->
@@ -967,6 +992,30 @@
               <option>Панельный</option>
               <option>Блочный</option>
               <option>Деревянный</option>
+            </select>
+          </div>
+          <!-- Состояние -->
+          <div>
+            <label class="filter-label" for="filter-condition">Состояние</label>
+            <select id="filter-condition" class="filter-select">
+              <option value="">Любое состояние</option>
+              <option>Без отделки</option>
+              <option>Черновая отделка</option>
+              <option>Предчистовая отделка</option>
+              <option>Косметический ремонт</option>
+              <option>Хороший ремонт</option>
+              <option>Дизайнерский ремонт</option>
+              <option>Свободная планировка</option>
+            </select>
+          </div>
+
+          <!-- Вид оплаты -->
+          <div>
+            <label class="filter-label" for="filter-payment">Вид оплаты</label>
+            <select id="filter-payment" class="filter-select">
+              <option value="">Любой</option>
+              <option value="cash">Наличные</option>
+              <option value="mortgage">Ипотека</option>
             </select>
           </div>
 
@@ -1467,7 +1516,7 @@
             </a>
           </li>
           <li class="leading-relaxed">ул. А. Бараева 16, офис №2<br>Астана, Казахстан</li>
-          <li>Ежедневно · 09:00—21:00</li>
+          <li>Ежедневно · 10:00—19:00</li>
         </ul>
       </div>
     </div>

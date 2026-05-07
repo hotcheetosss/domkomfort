@@ -36,6 +36,7 @@ function safeAgent(a) {
     phone:          a.phone || '',
     img:            a.img || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80',
     awards:         Array.isArray(a.awards) ? a.awards : [],
+    isTopMonth:     !!a.isTopMonth,
   };
 }
 
@@ -71,21 +72,24 @@ export function renderLeadership() {
     </div>
   `).join('');
 }
+// Карточка агента с поддержкой бейджа "TOP месяца"
+function agentCardHTML(a, i) {
+  const topBadge = a.isTopMonth
+    ? `<div class="absolute top-4 left-4 bg-gradient-to-r from-amber-400 to-amber-500 text-amber-900 text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full font-bold shadow-lg flex items-center gap-1.5">
+         <span>⭐</span> TOP месяца
+       </div>`
+    : '';
 
-export function renderAgentsGrid() {
-  const grid = document.getElementById('agents-grid');
-  if (!grid) return;
-  const safe = agents.map(safeAgent);
+  const krishaBadge = a.awards.length
+    ? `<div class="absolute top-4 right-4 krisha-badge text-primary-900 text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full font-semibold">TOP Krisha</div>`
+    : '';
 
-  // Обновим счётчик "Всего N агентов" если он есть на странице
-  const countEl = document.getElementById('agent-count');
-  if (countEl) countEl.textContent = safe.length;
-
-  grid.innerHTML = safe.map((a, i) => `
+  return `
     <a href="#" onclick="openAgent('${a.id}'); return false;" class="premium-card overflow-hidden group block fade-up" style="transition-delay:${(i % 4) * 0.05}s">
       <div class="aspect-[4/5] overflow-hidden relative">
         <img src="${a.img}" alt="${a.name}" class="w-full h-full object-cover prop-img" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80'"/>
-        ${a.awards.length ? `<div class="absolute top-4 right-4 krisha-badge text-primary-900 text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full font-semibold">TOP Krisha</div>` : ''}
+        ${topBadge}
+        ${krishaBadge}
         <div class="absolute inset-0 bg-gradient-to-t from-primary-900/80 via-transparent to-transparent"></div>
         <div class="absolute bottom-5 left-5 right-5 text-white">
           <div class="text-primary-300 text-[11px] uppercase tracking-[0.2em] mb-1">${a.role}</div>
@@ -103,7 +107,35 @@ export function renderAgentsGrid() {
         </div>
       </div>
     </a>
-  `).join('');
+  `;
+}
+
+export function renderAgentsGrid() {
+  const grid = document.getElementById('agents-grid');
+  if (!grid) return;
+  const safe = agents.map(safeAgent);
+
+  // Обновим счётчик "Всего N агентов"
+  const countEl = document.getElementById('agent-count');
+  if (countEl) countEl.textContent = safe.length;
+
+  // === Топ-агенты месяца — отдельный блок наверху ===
+  const topAgents = safe.filter(a => a.isTopMonth);
+  const topSection = document.getElementById('top-agents-section');
+  const topGrid = document.getElementById('top-agents-grid');
+
+  if (topSection && topGrid) {
+    if (topAgents.length > 0) {
+      topGrid.innerHTML = topAgents.map((a, i) => agentCardHTML(a, i)).join('');
+      topSection.classList.remove('hidden');
+    } else {
+      topSection.classList.add('hidden');
+      topGrid.innerHTML = '';
+    }
+  }
+
+  // === Все агенты (включая топов — они показываются дважды) ===
+  grid.innerHTML = safe.map((a, i) => agentCardHTML(a, i)).join('');
 }
 
 export function renderTeamPreview() {

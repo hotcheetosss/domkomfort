@@ -4,6 +4,30 @@ const photoService = require('../services/photoService');
 
 // ===== Хелперы =====
 
+const ALLOWED_LABEL_COLORS = ['blue', 'yellow', 'red', 'green', 'purple', 'gray'];
+const ALLOWED_CONDITIONS = [
+  'Без отделки',
+  'Черновая отделка',
+  'Предчистовая отделка',
+  'Косметический ремонт',
+  'Хороший ремонт',
+  'Дизайнерский ремонт',
+  'Свободная планировка',
+];
+
+const ALLOWED_PAYMENT_TYPES = ['cash', 'mortgage', 'any'];
+
+function sanitizeLabels(input) {
+  if (!Array.isArray(input)) return [];
+  return input
+    .filter(item => item && typeof item.text === 'string' && item.text.trim())
+    .slice(0, 2)  // максимум 2 лейбла
+    .map(item => ({
+      text: String(item.text).trim().slice(0, 30),  // максимум 30 символов
+      color: ALLOWED_LABEL_COLORS.includes(item.color) ? item.color : 'blue',
+    }));
+}
+
 // BigInt -> JSON дружественный формат
 function serialize(p) {
   if (!p) return null;
@@ -11,6 +35,7 @@ function serialize(p) {
     ...p,
     price: p.priceLabel,
     _priceNumeric: p.price.toString(),
+    customLabels: Array.isArray(p.customLabels) ? p.customLabels : [],
   };
 }
 
@@ -160,7 +185,7 @@ exports.create = async (req, res, next) => {
         year:          parseInt(req.body.year, 10),
         ceilingHeight: req.body.ceilingHeight ? parseFloat(req.body.ceilingHeight) : null,
         bathroom:      req.body.bathroom || null,
-        condition:     req.body.condition || null,
+        condition:     ALLOWED_CONDITIONS.includes(req.body.condition) ? req.body.condition : null,
         parking:       req.body.parking || null,
         balcony:       req.body.balcony || null,
         description:   req.body.description,
@@ -172,6 +197,8 @@ exports.create = async (req, res, next) => {
         buildingType:         req.body.buildingType || null,
         developerId:          req.body.developerId          ? parseInt(req.body.developerId, 10)          : null,
         residentialComplexId: req.body.residentialComplexId ? parseInt(req.body.residentialComplexId, 10) : null,
+        customLabels:         sanitizeLabels(req.body.customLabels),
+        paymentType:          ALLOWED_PAYMENT_TYPES.includes(req.body.paymentType) ? req.body.paymentType : null,
         agentId,
       },
     });
@@ -195,7 +222,7 @@ exports.update = async (req, res, next) => {
     if (errors.length) return res.status(400).json({ error: errors.join(', ') });
 
     const updateData = {};
-    const directFields = ['title', 'type', 'deal', 'district', 'address', 'bathroom', 'condition', 'parking', 'balcony', 'description'];
+    const directFields = ['title', 'type', 'deal', 'district', 'address', 'bathroom', 'parking', 'balcony', 'description', 'paymentType'];
     for (const f of directFields) {
       if (req.body[f] !== undefined) updateData[f] = req.body[f];
     }
@@ -212,7 +239,13 @@ exports.update = async (req, res, next) => {
     if (req.body.buildingType !== undefined)         updateData.buildingType = req.body.buildingType || null;
     if (req.body.developerId !== undefined)          updateData.developerId = req.body.developerId ? parseInt(req.body.developerId, 10) : null;
     if (req.body.residentialComplexId !== undefined) updateData.residentialComplexId = req.body.residentialComplexId ? parseInt(req.body.residentialComplexId, 10) : null;
-
+    if (req.body.condition !== undefined) {
+      updateData.condition = ALLOWED_CONDITIONS.includes(req.body.condition) ? req.body.condition : null;
+    }
+    if (req.body.paymentType !== undefined) {
+      updateData.paymentType = ALLOWED_PAYMENT_TYPES.includes(req.body.paymentType) ? req.body.paymentType : null;
+    }
+    if (req.body.customLabels !== undefined)         updateData.customLabels = sanitizeLabels(req.body.customLabels);
     if (req.body.price !== undefined) {
       const price = parsePrice(req.body.price);
       if (!price) return res.status(400).json({ error: 'Некорректная цена' });

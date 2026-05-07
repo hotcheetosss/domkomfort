@@ -35,12 +35,12 @@ function showApp() {
 
   // Заполнить данные юзера в sidebar
   const avatar = document.getElementById('user-avatar');
-  const nameEl = document.getElementById('user-name');
+  const phoneEl = document.getElementById('user-phone');
   const roleEl = document.getElementById('user-role');
 
   const initials = currentUser.name.split(' ').map(p => p[0]).slice(0, 2).join('');
   avatar.textContent = initials;
-  nameEl.textContent = currentUser.name;
+  phoneEl.textContent = currentUser.phone;
   roleEl.textContent = currentUser.role === 'admin' ? 'Администратор' : 'Агент';
 
   // Отметить роль на body — CSS скроет admin-only пункты меню для агента
@@ -48,6 +48,10 @@ function showApp() {
 
   // Показать дашборд
   showSection('dashboard');
+  
+  // Установить обработчики профиля
+  setupProfileMenu();
+  setupChangePasswordModal();
 }
 
 // ===== Логин =====
@@ -208,4 +212,141 @@ function renderRecentLeads(items) {
       </div>
     `;
   }).join('');
+}
+
+// ===== Профиль и меню =====
+function setupProfileMenu() {
+  const profileBtn = document.getElementById('profile-btn');
+  const profileMenu = document.getElementById('profile-menu');
+  const changePasswordBtn = document.getElementById('change-password-btn');
+  const logoutBtn = document.getElementById('logout-btn');
+
+  // Переключение меню при клике на профиль
+  profileBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profileMenu.classList.toggle('hidden');
+  });
+
+  // Закрытие меню при клике вне его
+  document.addEventListener('click', (e) => {
+    if (!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
+      profileMenu.classList.add('hidden');
+    }
+  });
+
+  // Открытие модалки смены пароля
+  changePasswordBtn.addEventListener('click', () => {
+    profileMenu.classList.add('hidden');
+    openChangePasswordModal();
+  });
+
+  // Logout
+  logoutBtn.addEventListener('click', logout);
+}
+
+function setupChangePasswordModal() {
+  const modal = document.getElementById('change-password-modal');
+  const form = document.getElementById('change-password-form');
+  const currentPasswordInput = document.getElementById('current-password');
+  const newPasswordInput = document.getElementById('new-password');
+  const confirmPasswordInput = document.getElementById('confirm-password');
+  const submitBtn = document.getElementById('modal-submit-btn');
+  const closeBtn = document.getElementById('modal-close-btn');
+  const cancelBtn = document.getElementById('modal-cancel-btn');
+  const errorBox = document.getElementById('form-error');
+  const successBox = document.getElementById('form-success');
+
+  // Закрытие модалки
+  const closeModal = () => {
+    modal.classList.add('hidden');
+    form.reset();
+    errorBox.classList.add('hidden');
+    successBox.classList.add('hidden');
+  };
+
+  closeBtn.addEventListener('click', closeModal);
+  cancelBtn.addEventListener('click', closeModal);
+
+  // Закрытие при клике вне модалки
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // Обработка формы
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.classList.add('hidden');
+    successBox.classList.add('hidden');
+
+    const currentPassword = currentPasswordInput.value;
+    const newPassword = newPasswordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+
+    // Валидация
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      errorBox.textContent = 'Все поля обязательны';
+      errorBox.classList.remove('hidden');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      errorBox.textContent = 'Новый пароль должен быть минимум 8 символов';
+      errorBox.classList.remove('hidden');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      errorBox.textContent = 'Пароли не совпадают';
+      errorBox.classList.remove('hidden');
+      return;
+    }
+
+    if (currentPassword === newPassword) {
+      errorBox.textContent = 'Новый пароль должен отличаться от текущего';
+      errorBox.classList.remove('hidden');
+      return;
+    }
+
+    // Отправка на сервер
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Сменяю...';
+
+    try {
+      await api.auth.changePassword(currentPassword, newPassword);
+      successBox.textContent = 'Пароль успешно обновлён!';
+      successBox.classList.remove('hidden');
+
+      // Закрытие модалки через 1.5 сек и показ тоста
+      setTimeout(() => {
+        closeModal();
+        showSuccessToast();
+      }, 1500);
+    } catch (err) {
+      errorBox.textContent = err.message || 'Ошибка при смене пароля';
+      errorBox.classList.remove('hidden');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Сменить пароль';
+    }
+  });
+}
+
+function openChangePasswordModal() {
+  const modal = document.getElementById('change-password-modal');
+  const form = document.getElementById('change-password-form');
+  const errorBox = document.getElementById('form-error');
+  const successBox = document.getElementById('form-success');
+  form.reset();
+  errorBox.classList.add('hidden');
+  successBox.classList.add('hidden');
+  modal.classList.remove('hidden');
+  document.getElementById('current-password').focus();
+}
+
+function showSuccessToast() {
+  const toast = document.getElementById('success-toast');
+  toast.classList.remove('hidden');
+  setTimeout(() => {
+    toast.classList.add('hidden');
+  }, 3000);
 }

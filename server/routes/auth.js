@@ -15,5 +15,6 @@ const loginLimiter = rateLimit({
 router.post('/login', loginLimiter, ctrl.login);
 router.post('/logout', ctrl.logout);
 router.get('/me', requireAuth, ctrl.me);
+router.post('/change-password', requireAuth, ctrl.changePassword);
 
 module.exports = router;

@@ -67,3 +67,7 @@ domkomfort/
 3. Добавить загрузку фото через multer (`/uploads/`).
 4. Интеграция WhatsApp Business API для уведомлений о заявках.
 5. SEO: History API (`pushState`) и мета-теги для страниц объектов.
+
+docker start domkomfort-db
+docker ps
+npm run dev

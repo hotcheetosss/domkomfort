@@ -35,6 +35,7 @@ model Agent {
   img             String?                            // URL фото агента
   awards          String[] @default([])              // массив наград: ["ТОП-7 Krisha 2024"]
   userId          Int?     @unique                 // ← НОВОЕ
+  isTopMonth     Boolean  @default(false)
   user            User?    @relation(fields: [userId], references: [id])   // ← НОВОЕ
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -90,6 +91,8 @@ model Property {
   // НОВЫЕ ПОЛЯ
   housingClass         String?  // Эконом / Комфорт / Бизнес / Премиум / Элит
   buildingType         String?  // Монолит / Монолитно-каркасный / Кирпичный / ...
+  customLabels         Json?
+  paymentType          String?       // ← добавить эту строку
   developerId          Int?
   developer            Developer? @relation(fields: [developerId], references: [id])
   residentialComplexId Int?

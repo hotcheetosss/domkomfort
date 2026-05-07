@@ -1,5 +1,13 @@
 import { api } from './api.js';
 import { agents } from './agents.js';
+const LABEL_COLOR_STYLES = {
+  blue:   'background:#3B82F6;color:#FFFFFF',
+  yellow: 'background:#FACC15;color:#1F2937',
+  red:    'background:#EF4444;color:#FFFFFF',
+  green:  'background:#22C55E;color:#FFFFFF',
+  purple: 'background:#A855F7;color:#FFFFFF',
+  gray:   'background:#6B7280;color:#FFFFFF',
+};
 
 export let allProperties = [];
 let loaded = false;
@@ -17,6 +25,8 @@ const filterState = {
   complexId:    '',
   housingClass: '',
   buildingType: '',
+  condition:    '',
+  paymentType:  '',
   yearMin:      null,
   yearMax:      null,
   floorMin:     null,
@@ -91,15 +101,48 @@ export function propCardHTML(p) {
     ? `<div class="text-[11px] text-primary-700 font-medium mb-1">${escapeHtml(p.residentialComplex.name)}</div>`
     : '';
 
+  // Берём максимум 5 фото
+  const gallery = (p.gallery || []).slice(0, 5);
+  const hasMultiple = gallery.length > 1;
+  const fallbackImg = 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80';
+  const firstImg = gallery[0] || fallbackImg;
+
+  // Кастомные лейблы (если есть)
+  const customLabelsHTML = (Array.isArray(p.customLabels) ? p.customLabels : []).map(label => {
+    const style = LABEL_COLOR_STYLES[label.color] || LABEL_COLOR_STYLES.blue;
+    return `<span class="text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full font-semibold" style="${style}">${escapeHtml(label.text)}</span>`;
+  }).join('');
+
+  // Точки-индикаторы (только если фото больше 1)
+  const dotsHTML = hasMultiple
+    ? `<div class="card-dots">
+        ${gallery.map((_, i) => `<span class="card-dot${i === 0 ? ' active' : ''}"></span>`).join('')}
+      </div>`
+    : '';
+
+  // Зоны клика (только если фото больше 1)
+  const navZonesHTML = hasMultiple
+    ? `<button class="card-nav-zone card-nav-prev" data-nav="prev" aria-label="Предыдущее фото"></button>
+       <button class="card-nav-zone card-nav-next" data-nav="next" aria-label="Следующее фото"></button>`
+    : '';
+
+  // Сериализуем массив фото в data-атрибут
+  const galleryJson = JSON.stringify(gallery).replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+
   return `
-    <a href="#" onclick="openProperty('${p.id}'); return false;" class="premium-card overflow-hidden group block fade-up">
-      <div class="aspect-[4/3] overflow-hidden relative">
-        <img src="${(p.gallery && p.gallery[0]) || 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80'}" alt="${p.title}" class="w-full h-full object-cover prop-img"/>
-        ${p.top ? '<div class="absolute top-4 left-4 krisha-badge text-primary-900 text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full font-semibold">TOP</div>' : ''}
-        ${p.deal === 'rent' ? '<div class="absolute top-4 right-4 bg-primary-600 text-white text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full font-medium">Аренда</div>' : ''}
-        <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur text-primary-900 text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full font-semibold">${p.type}</div>
+    <div class="premium-card overflow-hidden group fade-up card-with-slider" data-prop-id="${p.id}" data-gallery="${galleryJson}">
+      <div class="aspect-[4/3] overflow-hidden relative card-img-wrap">
+        <img class="w-full h-full object-cover prop-img card-main-img" src="${firstImg}" alt="${escapeHtml(p.title)}"/>
+        ${navZonesHTML}
+        <div class="absolute top-4 left-4 flex flex-col gap-1.5 items-start pointer-events-none">
+          ${p.top ? '<span class="krisha-badge text-primary-900 text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full font-semibold">TOP</span>' : ''}
+          ${customLabelsHTML}
+        </div>
+        ${p.deal === 'rent' ? '<div class="absolute top-4 right-4 bg-primary-600 text-white text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full font-medium pointer-events-none">Аренда</div>' : ''}
+        <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur text-primary-900 text-[10px] uppercase tracking-[0.15em] px-3 py-1.5 rounded-full font-semibold pointer-events-none">${p.type}</div>
+        ${dotsHTML}
       </div>
-      <div class="p-6">
+      <a href="#" onclick="openProperty('${p.id}'); return false;" class="block p-6">
         ${complexBadge}
         <div class="text-xs uppercase tracking-[0.15em] text-graphite/50 mb-2">${p.district} · ${p.sqm} м² · ${p.floor ? p.floor + '/' + p.totalFloors : p.totalFloors + ' эт.'}</div>
         <h3 class="font-display text-xl text-primary-900 font-medium leading-tight mb-4">${p.title}</h3>
@@ -112,8 +155,8 @@ export function propCardHTML(p) {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </span>
         </div>
-      </div>
-    </a>
+      </a>
+    </div>
   `;
 }
 
@@ -168,6 +211,13 @@ export function renderProperties() {
   if (filterState.buildingType) {
     filtered = filtered.filter(p => p.buildingType === filterState.buildingType);
   }
+  if (filterState.condition) {
+    filtered = filtered.filter(p => p.condition === filterState.condition);
+  }
+
+  if (filterState.paymentType) {
+    filtered = filtered.filter(p => p.paymentType === filterState.paymentType || p.paymentType === 'any');
+  }
 
   if (filterState.yearMin !== null) filtered = filtered.filter(p => (p.year || 0) >= filterState.yearMin);
   if (filterState.yearMax !== null) filtered = filtered.filter(p => (p.year || 0) <= filterState.yearMax);
@@ -195,6 +245,7 @@ export function renderProperties() {
       }, { threshold: 0.1 });
       grid.querySelectorAll('.fade-up').forEach(el => io.observe(el));
     }
+    initCardSliders();
   }
 
   document.querySelectorAll('#properties-filters .filter-chip').forEach(btn => {
@@ -205,6 +256,38 @@ export function renderProperties() {
   });
 
   updateResetButton();
+}
+
+function initCardSliders() {
+  document.querySelectorAll('.card-with-slider').forEach(card => {
+    if (card.dataset.sliderInit) return;
+    card.dataset.sliderInit = '1';
+
+    const galleryRaw = card.dataset.gallery;
+    let gallery = [];
+    try { gallery = JSON.parse(galleryRaw); } catch { gallery = []; }
+    if (gallery.length <= 1) return;
+
+    const img = card.querySelector('.card-main-img');
+    const dots = card.querySelectorAll('.card-dot');
+    let currentIdx = 0;
+
+    function show(idx) {
+      if (idx < 0) idx = gallery.length - 1;
+      if (idx >= gallery.length) idx = 0;
+      currentIdx = idx;
+      if (img) img.src = gallery[idx];
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+
+    card.querySelectorAll('[data-nav]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        show(currentIdx + (btn.dataset.nav === 'prev' ? -1 : 1));
+      });
+    });
+  });
 }
 
 function updateResetButton() {
@@ -218,6 +301,7 @@ function updateResetButton() {
     filterState.sqmMin === null && filterState.sqmMax === null &&
     !filterState.developerId && !filterState.complexId &&
     !filterState.housingClass && !filterState.buildingType &&
+    !filterState.condition && !filterState.paymentType &&
     filterState.yearMin === null && filterState.yearMax === null &&
     filterState.floorMin === null && filterState.floorMax === null &&
     filterState.sort === 'default'
@@ -273,6 +357,14 @@ export function initPropertyFilters() {
     filterState.buildingType = e.target.value;
     renderProperties();
   });
+  document.getElementById('filter-condition')?.addEventListener('change', e => {
+    filterState.condition = e.target.value;
+    renderProperties();
+  });
+  document.getElementById('filter-payment')?.addEventListener('change', e => {
+    filterState.paymentType = e.target.value;
+    renderProperties();
+  });
 
   const numericInputs = [
     ['filter-price-min', 'priceMin'],
@@ -323,7 +415,8 @@ export function resetFilters() {
    'filter-year-min','filter-year-max','filter-floor-min','filter-floor-max']
     .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
 
-  ['filter-district','filter-developer','filter-complex','filter-class','filter-building-type']
+  ['filter-district','filter-developer','filter-complex','filter-class','filter-building-type',
+   'filter-condition','filter-payment']
     .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
 
   const sort = document.getElementById('filter-sort');

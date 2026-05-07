@@ -19,6 +19,7 @@ export async function openAgentForm(user, id, onClose) {
         awards: a.awards || [],
         img: a.img,
         hasAccount: !!a.user,
+        isTopMonth: !!a.isTopMonth,
       };
     } catch (err) {
       alert('Не удалось загрузить агента: ' + err.message);
@@ -34,6 +35,7 @@ export async function openAgentForm(user, id, onClose) {
       img: null,
       withAccount: true,
       password: '',
+      isTopMonth: false,
     };
   }
 
@@ -134,6 +136,22 @@ function formHTML() {
           <div class="flex gap-2">
             <input id="award-input" type="text" class="admin-input flex-1" placeholder="Добавить награду" />
             <button type="button" id="award-add-btn" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium transition">Добавить</button>
+          </div>
+        </section>
+
+        <!-- Топ-агент месяца -->
+        <section>
+          <h3 class="form-section-title">Статус</h3>
+          <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" name="isTopMonth" ${formData.isTopMonth ? 'checked' : ''} class="form-checkbox mt-0.5" />
+              <div>
+                <div class="text-sm font-medium text-graphite flex items-center gap-2">
+                  <span class="text-amber-500">⭐</span> Топ-агент месяца
+                </div>
+                <div class="text-xs text-graphite/60 mt-1">Будет показан отдельным блоком вверху на странице агентов сайта. Снимите галочку чтобы убрать статус.</div>
+              </div>
+            </label>
           </div>
         </section>
 
@@ -258,6 +276,7 @@ async function handleSubmit(onClose) {
     specialization: fd.get('specialization')?.trim(),
     phone: fd.get('phone')?.trim(),
     awards: formData.awards,
+    isTopMonth: fd.get('isTopMonth') === 'on',
   };
 
   if (!editingId) {

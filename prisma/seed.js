@@ -22,7 +22,7 @@ async function main() {
 
   // 1. Создаём админа
   console.log('  Создаём админский аккаунт...');
-  const adminPassword = await bcrypt.hash('admin12345', 10);
+  const adminPassword = await bcrypt.hash('Mchukeeva82', 10);
   await prisma.user.create({
     data: {
       phone:    '77085050826',
@@ -103,7 +103,7 @@ async function main() {
   console.log('\n✅ Готово! База заполнена.');
   console.log('\n👤 Админский аккаунт:');
   console.log('   Телефон: +7 708 505 0826');
-  console.log('   Пароль:  admin12345\n');
+  console.log('   Пароль:  Mchukeeva82\n');
 }
 
 main()

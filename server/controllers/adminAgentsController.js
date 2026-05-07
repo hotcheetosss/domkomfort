@@ -112,6 +112,7 @@ exports.create = async (req, res, next) => {
           phone,
           listings: 0,
           awards: Array.isArray(awards) ? awards : [],
+          isTopMonth: !!req.body.isTopMonth,
           userId,
         },
       });
@@ -146,6 +147,7 @@ exports.update = async (req, res, next) => {
     if (req.body.role !== undefined)           updateData.role = String(req.body.role).trim();
     if (req.body.specialization !== undefined) updateData.specialization = String(req.body.specialization).trim();
     if (req.body.awards !== undefined)         updateData.awards = Array.isArray(req.body.awards) ? req.body.awards : [];
+    if (req.body.isTopMonth !== undefined)     updateData.isTopMonth = !!req.body.isTopMonth;
 
     // Телефон — отдельная логика, синхронизируем с user если есть
     if (req.body.phone !== undefined) {

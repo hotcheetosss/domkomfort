@@ -68,3 +68,40 @@ exports.logout = (req, res) => {
   // Этот эндпоинт нужен для единообразия и будущих улучшений (blacklist и т.д.)
   res.json({ ok: true });
 };
+
+exports.changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Текущий и новый пароль обязательны' });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({ error: 'Новый пароль должен быть минимум 8 символов' });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+    });
+
+    if (!user) {
+      return res.status(401).json({ error: 'Пользователь не найден' });
+    }
+
+    const passwordMatches = await bcrypt.compare(currentPassword, user.password);
+    if (!passwordMatches) {
+      return res.status(401).json({ error: 'Текущий пароль неверный' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashedPassword },
+    });
+
+    res.json({ ok: true, message: 'Пароль успешно обновлён' });
+  } catch (err) {
+    next(err);
+  }
+};

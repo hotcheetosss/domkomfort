@@ -7,6 +7,7 @@ function serializeProperty(p) {
     ...p,
     price: p.priceLabel,       // на фронт отдаём форматированную "93 400 000"
     _priceNumeric: p.price.toString(),  // цифровая версия для JS-фильтров
+    customLabels: Array.isArray(p.customLabels) ? p.customLabels : [],
   };
 }
 
@@ -15,6 +16,7 @@ exports.list = async (req, res, next) => {
     const {
       type, deal, district, agentId,
       developerId, complexId, housingClass, buildingType,
+      condition, paymentType,
       yearMin, yearMax, floorMin, floorMax,
     } = req.query;
 
@@ -27,6 +29,14 @@ exports.list = async (req, res, next) => {
     if (complexId)    where.residentialComplexId = parseInt(complexId, 10);
     if (housingClass) where.housingClass = housingClass;
     if (buildingType) where.buildingType = buildingType;
+    if (condition) where.condition = condition;
+    if (paymentType) {
+      // объект с paymentType="any" подходит и для cash, и для mortgage
+      where.OR = [
+        { paymentType: paymentType },
+        { paymentType: 'any' },
+      ];
+    }
 
     if (yearMin || yearMax) {
       where.year = {};

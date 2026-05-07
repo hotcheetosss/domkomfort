@@ -46,6 +46,10 @@ export const api = {
     }),
     logout: () => request(`${API}/auth/logout`, { method: 'POST' }),
     me:     () => request(`${API}/auth/me`),
+    changePassword: (currentPassword, newPassword) => request(`${API}/auth/change-password`, {
+      method: 'POST',
+      body: JSON.stringify({ currentPassword, newPassword }),
+    }),
   },
   properties: {
     // Публичный API (для дашборда — статистика)
