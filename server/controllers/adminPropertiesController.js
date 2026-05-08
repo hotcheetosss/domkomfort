@@ -34,7 +34,7 @@ function serialize(p) {
   return {
     ...p,
     price: p.priceLabel,
-    _priceNumeric: p.price.toString(),
+    _priceNumeric: p.price ? p.price.toString() : '0',
     customLabels: Array.isArray(p.customLabels) ? p.customLabels : [],
   };
 }

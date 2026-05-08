@@ -25,7 +25,6 @@ async function request(url, options = {}) {
   const res = await fetch(url, { ...options, headers });
 
   if (res.status === 401) {
-    // Токен истёк или невалидный — чистим и редиректим на логин
     clearToken();
     window.location.hash = '#login';
     throw new Error('Требуется повторный вход');
@@ -51,12 +50,11 @@ export const api = {
       body: JSON.stringify({ currentPassword, newPassword }),
     }),
   },
+
   properties: {
-    // Публичный API (для дашборда — статистика)
     listPublic: () => request(`${API}/properties`),
 
-    // Админ API
-    list:       (params = {}) => {
+    list: (params = {}) => {
       const qs = new URLSearchParams(params).toString();
       return request(`${API}/admin/properties${qs ? '?' + qs : ''}`);
     },
@@ -91,6 +89,7 @@ export const api = {
       body: JSON.stringify({ gallery }),
     }),
   },
+
   agents: {
     listPublic: () => request(`${API}/agents`),
     list:       () => request(`${API}/admin/agents`),
@@ -123,49 +122,17 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ password }),
     }),
-    toggleActive:  (id) => request(`${API}/admin/agents/${id}/account/toggle`, { method: 'POST' }),
-    developers: {
-    list:   (search) => {
-      const qs = search ? '?search=' + encodeURIComponent(search) : '';
-      return request(`${API}/admin/developers${qs}`);
-    },
-    create: (name) => request(`${API}/admin/developers`, {
-      method: 'POST',
-      body: JSON.stringify({ name }),
-    }),
-    remove: (id) => request(`${API}/admin/developers/${id}`, { method: 'DELETE' }),
+    toggleActive: (id) => request(`${API}/admin/agents/${id}/account/toggle`, { method: 'POST' }),
   },
 
-  complexes: {
+  leads: {
     list:   (params = {}) => {
       const qs = new URLSearchParams(params).toString();
-      return request(`${API}/admin/complexes${qs ? '?' + qs : ''}`);
-    },
-    create: (name, developerId) => request(`${API}/admin/complexes`, {
-      method: 'POST',
-      body: JSON.stringify({ name, developerId }),
-    }),
-    remove: (id) => request(`${API}/admin/complexes/${id}`, { method: 'DELETE' }),
-  },
-  },
-
-  leads: {
-    list:    (params = {}) => {
-      const qs = new URLSearchParams(params).toString();
       return request(`${API}/admin/leads${qs ? '?' + qs : ''}`);
     },
-    get:     (id) => request(`${API}/admin/leads/${id}`),
-    update:  (id, data) => request(`${API}/admin/leads/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-    remove:  (id) => request(`${API}/admin/leads/${id}`, { method: 'DELETE' }),
-  },
-  leads: {
-    list:    (params = {}) => {
-      const qs = new URLSearchParams(params).toString();
-      return request(`${API}/admin/leads${qs ? '?' + qs : ''}`);
-    },
-    get:     (id) => request(`${API}/admin/leads/${id}`),
-    update:  (id, data) => request(`${API}/admin/leads/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-    remove:  (id) => request(`${API}/admin/leads/${id}`, { method: 'DELETE' }),
+    get:    (id) => request(`${API}/admin/leads/${id}`),
+    update: (id, data) => request(`${API}/admin/leads/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    remove: (id) => request(`${API}/admin/leads/${id}`, { method: 'DELETE' }),
   },
 
   developers: {
@@ -192,6 +159,5 @@ export const api = {
     remove: (id) => request(`${API}/admin/complexes/${id}`, { method: 'DELETE' }),
   },
 };
-
 
 export { getToken, setToken, clearToken };
