@@ -113,6 +113,7 @@ exports.create = async (req, res, next) => {
           listings: 0,
           awards: Array.isArray(awards) ? awards : [],
           isTopMonth: !!req.body.isTopMonth,
+          topMonthOrder: Number.isFinite(parseInt(req.body.topMonthOrder, 10)) ? parseInt(req.body.topMonthOrder, 10) : 100,
           userId,
         },
       });
@@ -148,6 +149,10 @@ exports.update = async (req, res, next) => {
     if (req.body.specialization !== undefined) updateData.specialization = String(req.body.specialization).trim();
     if (req.body.awards !== undefined)         updateData.awards = Array.isArray(req.body.awards) ? req.body.awards : [];
     if (req.body.isTopMonth !== undefined)     updateData.isTopMonth = !!req.body.isTopMonth;
+    if (req.body.topMonthOrder !== undefined) {
+      const num = parseInt(req.body.topMonthOrder, 10);
+      updateData.topMonthOrder = Number.isFinite(num) ? num : 100;
+    }
 
     // Телефон — отдельная логика, синхронизируем с user если есть
     if (req.body.phone !== undefined) {

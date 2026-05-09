@@ -8,7 +8,7 @@ let agentsList  = [];
 let developersCache = [];
 let complexesCache  = [];
 
-const HOUSING_CLASSES = ['Эконом', 'Комфорт', 'Бизнес', 'Премиум', 'Элит'];
+const HOUSING_CLASSES = ['Эконом','Стандарт', 'Комфорт','Комфорт+', 'Бизнес', 'Премиум', 'Элит'];
 const LABEL_COLORS = [
   { value: 'blue',   name: 'Синий',      bg: '#3B82F6', text: '#FFFFFF' },
   { value: 'yellow', name: 'Жёлтый',     bg: '#FACC15', text: '#1F2937' },
@@ -92,6 +92,7 @@ export async function openPropertyForm(user, id, onClose) {
       agentId:       currentUser.role === 'agent' && currentUser.agent
         ? currentUser.agent.id
         : (agentsList[0]?.id || ''),
+      videoUrl: '',
     };
   }
 
@@ -129,6 +130,7 @@ function mapFromServer(p) {
     developerId:          p.developerId          || null,
     residentialComplexId: p.residentialComplexId || null,
     agentId:       p.agentId,
+    videoUrl:      p.videoUrl || '',
   };
 }
 
@@ -152,7 +154,7 @@ function renderForm(onClose) {
 
 function formHTML() {
   const isEdit = !!editingId;
-  const districts = ['Есильский р-н', 'Алматинский р-н', 'Сарыаркинский р-н', 'Караоткель'];
+  const districts = ['Есильский р-н', 'Алматинский р-н', 'Сарыаркинский р-н',  'Байконыр','Нура','Сарайшык', 'Караоткель'];
   const types = ['Квартира', 'Новостройка', 'Дом', 'Коммерция'];
   const canChangeAgent = currentUser.role === 'admin';
 
@@ -381,6 +383,19 @@ function formHTML() {
         <section>
           <h3 class="form-section-title">Описание</h3>
           <textarea name="description" required rows="6" class="admin-input" placeholder="Расскажите подробно об объекте...">${esc(formData.description)}</textarea>
+        </section>
+        <!-- Видео-обзор -->
+        <section>
+          <h3 class="form-section-title">Видео-обзор</h3>
+          <div class="text-xs text-graphite/50 mb-3">Ссылка на видео объекта (YouTube, Instagram, любой другой источник). На карточке появится кнопка «Смотреть видео».</div>
+          <input
+            name="videoUrl"
+            type="url"
+            value="${esc(formData.videoUrl)}"
+            class="admin-input"
+            placeholder="https://youtu.be/abc123 или https://instagram.com/p/..."
+            maxlength="500"
+          />
         </section>
 
         <!-- 7. Особенности -->
@@ -824,6 +839,7 @@ async function handleSubmit(onClose) {
     customLabels:  formData.customLabels.filter(l => l.text && l.text.trim()),
     developerId,
     residentialComplexId,
+    videoUrl: fd.get('videoUrl')?.trim() || null,
   };
 
   const submitBtn = document.getElementById('form-submit');

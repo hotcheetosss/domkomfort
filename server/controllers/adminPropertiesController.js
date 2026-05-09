@@ -198,6 +198,7 @@ exports.create = async (req, res, next) => {
         developerId:          req.body.developerId          ? parseInt(req.body.developerId, 10)          : null,
         residentialComplexId: req.body.residentialComplexId ? parseInt(req.body.residentialComplexId, 10) : null,
         customLabels:         sanitizeLabels(req.body.customLabels),
+        videoUrl:             req.body.videoUrl ? String(req.body.videoUrl).trim().slice(0, 500) || null : null,
         paymentType:          ALLOWED_PAYMENT_TYPES.includes(req.body.paymentType) ? req.body.paymentType : null,
         agentId,
       },
@@ -246,6 +247,9 @@ exports.update = async (req, res, next) => {
       updateData.paymentType = ALLOWED_PAYMENT_TYPES.includes(req.body.paymentType) ? req.body.paymentType : null;
     }
     if (req.body.customLabels !== undefined)         updateData.customLabels = sanitizeLabels(req.body.customLabels);
+    if (req.body.videoUrl !== undefined) {
+      updateData.videoUrl = req.body.videoUrl ? String(req.body.videoUrl).trim().slice(0, 500) || null : null;
+    }
     if (req.body.price !== undefined) {
       const price = parsePrice(req.body.price);
       if (!price) return res.status(400).json({ error: 'Некорректная цена' });

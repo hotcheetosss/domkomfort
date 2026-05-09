@@ -37,6 +37,7 @@ function safeAgent(a) {
     img:            a.img || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80',
     awards:         Array.isArray(a.awards) ? a.awards : [],
     isTopMonth:     !!a.isTopMonth,
+    topMonthOrder:  Number.isFinite(parseInt(a.topMonthOrder, 10)) ? parseInt(a.topMonthOrder, 10) : 100,
   };
 }
 
@@ -120,7 +121,14 @@ export function renderAgentsGrid() {
   if (countEl) countEl.textContent = safe.length;
 
   // === Топ-агенты месяца — отдельный блок наверху ===
-  const topAgents = safe.filter(a => a.isTopMonth);
+  // === Топ-агенты месяца — отдельный блок наверху ===
+  const topAgents = safe
+    .filter(a => a.isTopMonth)
+    .sort((a, b) => {
+      // Сначала по порядку (меньше = выше), потом по имени для одинаковых
+      if (a.topMonthOrder !== b.topMonthOrder) return a.topMonthOrder - b.topMonthOrder;
+      return a.name.localeCompare(b.name);
+    });
   const topSection = document.getElementById('top-agents-section');
   const topGrid = document.getElementById('top-agents-grid');
 

@@ -505,6 +505,12 @@ export function openProperty(id) {
 
             <div class="flex flex-col gap-3">
               <a href="https://wa.me/${(agent && agent.phone ? agent.phone : '77085050826').replace(/[^0-9]/g,'')}?text=${encodeURIComponent('Здравствуйте! Интересует объект: ' + p.title + ' (' + p.price + ' ₸)')}" target="_blank" class="btn-wa justify-center">Написать в WhatsApp</a>
+              ${p.videoUrl ? `
+                <a href="${escapeHtml(p.videoUrl)}" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-full transition shadow-md">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  Смотреть видео
+                </a>
+              ` : ''}
             </div>
           </div>
         </div>

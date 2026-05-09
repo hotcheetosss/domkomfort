@@ -20,6 +20,7 @@ export async function openAgentForm(user, id, onClose) {
         img: a.img,
         hasAccount: !!a.user,
         isTopMonth: !!a.isTopMonth,
+        topMonthOrder: a.topMonthOrder ?? 100,
       };
     } catch (err) {
       alert('Не удалось загрузить агента: ' + err.message);
@@ -36,6 +37,7 @@ export async function openAgentForm(user, id, onClose) {
       withAccount: true,
       password: '',
       isTopMonth: false,
+      topMonthOrder: 100,
     };
   }
 
@@ -142,9 +144,9 @@ function formHTML() {
         <!-- Топ-агент месяца -->
         <section>
           <h3 class="form-section-title">Статус</h3>
-          <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 space-y-4">
             <label class="flex items-start gap-3 cursor-pointer">
-              <input type="checkbox" name="isTopMonth" ${formData.isTopMonth ? 'checked' : ''} class="form-checkbox mt-0.5" />
+              <input type="checkbox" name="isTopMonth" ${formData.isTopMonth ? 'checked' : ''} class="form-checkbox mt-0.5" id="is-top-month-checkbox" />
               <div>
                 <div class="text-sm font-medium text-graphite flex items-center gap-2">
                   <span class="text-amber-500">⭐</span> Топ-агент месяца
@@ -152,6 +154,22 @@ function formHTML() {
                 <div class="text-xs text-graphite/60 mt-1">Будет показан отдельным блоком вверху на странице агентов сайта. Снимите галочку чтобы убрать статус.</div>
               </div>
             </label>
+
+            <div id="top-month-order-section" class="${formData.isTopMonth ? '' : 'hidden'} pl-7 pt-3 border-t border-amber-200">
+              <label class="form-label">Порядок отображения</label>
+              <input
+                name="topMonthOrder"
+                type="number"
+                min="1"
+                step="1"
+                value="${formData.topMonthOrder ?? 100}"
+                class="admin-input max-w-[160px]"
+              />
+              <div class="text-xs text-graphite/60 mt-2">
+                Чем меньше число, тем выше агент в блоке «TOP месяца». Например: 1 = первый, 2 = второй и т.д.<br>
+                По умолчанию <strong>100</strong> — агент идёт после тех, у кого выставлен явный порядок.
+              </div>
+            </div>
           </div>
         </section>
 
@@ -213,7 +231,6 @@ function attachHandlers(onClose) {
     if (e.key === 'Enter') { e.preventDefault(); addAward(); }
   });
   document.getElementById('award-add-btn')?.addEventListener('click', addAward);
-
   document.getElementById('awards-list').addEventListener('click', (e) => {
     const btn = e.target.closest('.award-remove');
     if (!btn) return;
@@ -221,6 +238,16 @@ function attachHandlers(onClose) {
     formData.awards = formData.awards.filter(a => a !== tag.dataset.award);
     tag.remove();
   });
+
+  // Показать/скрыть поле «Порядок» когда меняется чекбокс топ-месяца
+  document.getElementById('is-top-month-checkbox')?.addEventListener('change', e => {
+    const orderSection = document.getElementById('top-month-order-section');
+    if (orderSection) {
+      orderSection.classList.toggle('hidden', !e.target.checked);
+    }
+  });
+
+  // With-account toggle
 
   // With-account toggle
   document.getElementById('with-account')?.addEventListener('change', e => {
@@ -277,6 +304,7 @@ async function handleSubmit(onClose) {
     phone: fd.get('phone')?.trim(),
     awards: formData.awards,
     isTopMonth: fd.get('isTopMonth') === 'on',
+    topMonthOrder: parseInt(fd.get('topMonthOrder'), 10) || 100,
   };
 
   if (!editingId) {
