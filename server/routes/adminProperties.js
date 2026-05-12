@@ -20,7 +20,7 @@ router.put('/:id',      ctrl.update);
 router.post('/:id/deactivate', ctrl.deactivate);
 
 // Полное удаление — только админ
-router.delete('/:id', requireRole('admin'), ctrl.remove);
+router.delete('/:id', ctrl.remove);
 
 // Фото
 router.post('/:id/photos',         upload.array('photos', 20), ctrl.uploadPhotos);

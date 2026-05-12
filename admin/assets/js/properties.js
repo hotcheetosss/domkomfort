@@ -176,7 +176,9 @@ function rowHTML(p) {
     ? `<span class="inline-flex items-center gap-1.5 text-xs text-primary-700"><span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span>Активен</span>`
     : `<span class="inline-flex items-center gap-1.5 text-xs text-graphite/50"><span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>Скрыт</span>`;
 
-  const canDelete = currentUser.role === 'admin';
+  // Админ удаляет любые объекты; агент — только свои
+  const canDelete = currentUser.role === 'admin'
+    || (currentUser.agent && p.agent && currentUser.agent.id === p.agent.id);
 
   return `
     <tr class="border-b border-gray-100 hover:bg-gray-50/50 transition">

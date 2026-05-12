@@ -296,26 +296,38 @@ exports.deactivate = async (req, res, next) => {
 };
 
 // Полное удаление — только админ
+
+// Полное удаление — admin удаляет любой объект, agent — только свой
 exports.remove = async (req, res, next) => {
   try {
     const existing = await prisma.property.findUnique({ where: { id: req.params.id } });
     if (!existing) return res.status(404).json({ error: 'Объект не найден' });
 
+    // Проверка прав: admin — любой, agent — только свой
+    if (!(await canEditProperty(req.user, existing))) {
+      return res.status(403).json({ error: 'Можно удалять только свои объекты' });
+    }
+
     // Удаляем фото с диска
     await photoService.deletePropertyFolder(req.params.id);
 
-    // Удаляем заявки, привязанные к этому объекту (обнуляем связь)
+    // Обнуляем заявки, привязанные к этому объекту
     await prisma.lead.updateMany({
       where: { propertyId: req.params.id },
       data:  { propertyId: null },
     });
 
     await prisma.property.delete({ where: { id: req.params.id } });
+
     res.json({ ok: true });
   } catch (err) {
     next(err);
   }
 };
+
+
+// ===== Фото =====
+
 
 // ===== Фото =====
 

@@ -128,7 +128,7 @@ export function renderAgentsGrid() {
       // Сначала по порядку (меньше = выше), потом по имени для одинаковых
       if (a.topMonthOrder !== b.topMonthOrder) return a.topMonthOrder - b.topMonthOrder;
       return a.name.localeCompare(b.name);
-    });
+    }); 
   const topSection = document.getElementById('top-agents-section');
   const topGrid = document.getElementById('top-agents-grid');
 
