@@ -38,6 +38,7 @@ function safeAgent(a) {
     awards:         Array.isArray(a.awards) ? a.awards : [],
     isTopMonth:     !!a.isTopMonth,
     topMonthOrder:  Number.isFinite(parseInt(a.topMonthOrder, 10)) ? parseInt(a.topMonthOrder, 10) : 100,
+    reviews: Array.isArray(a.reviews) ? a.reviews : [],
   };
 }
 
@@ -269,6 +270,66 @@ export function openAgent(id) {
         <a href="https://wa.me/${a.phone.replace(/[^0-9]/g,'')}" target="_blank" class="btn-wa">Связаться с ${a.name.split(' ')[0]}</a>
       </div>
     </section>
+    ${a.reviews && a.reviews.length ? `
+    <section class="py-16 lg:py-24 bg-ivory">
+      <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+        <div class="max-w-2xl mb-12">
+          <div class="section-label">Отзывы</div>
+          <h2 class="font-display text-4xl lg:text-5xl text-primary-900 font-light leading-[1.05]">
+            Что говорят <span class="italic text-primary-600">клиенты</span>
+          </h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          ${a.reviews.map((r, i) => reviewCardHTML(r, i)).join('')}
+        </div>
+      </div>
+    </section>
+    ` : ''}
   `;
+
   window.navigate('agent-detail');
+}
+
+// ===== Хелпер для рендера карточки отзыва (вне openAgent!) =====
+// ===== Хелпер для рендера карточки отзыва (вне openAgent!) =====
+function reviewCardHTML(r, i) {
+  const sourceLabels = {
+    '2GIS': '2ГИС',
+    'Krisha': 'Krisha.kz',
+    'Google': 'Google',
+    'WhatsApp': 'WhatsApp',
+    'Own': 'Дом Комфорт',
+  };
+
+  const sourceBadge = r.source
+    ? `<span class="inline-block px-2.5 py-1 bg-primary-50 text-primary-700 text-[10px] uppercase tracking-[0.15em] rounded-full font-semibold">${sourceLabels[r.source] || r.source}</span>`
+    : '';
+
+  const initial = (r.authorName || '?').trim().charAt(0).toUpperCase();
+
+  return `
+    <div class="premium-card p-8" style="transition-delay:${i * 0.05}s">
+      <div class="flex items-start justify-between gap-3 mb-5">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="#3E9569" class="opacity-70 flex-shrink-0">
+          <path d="M10 11H6a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2v6c0 2.5-1.5 5-5 5v-2c2 0 3-1.5 3-3V11zm10 0h-4a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2v6c0 2.5-1.5 5-5 5v-2c2 0 3-1.5 3-3V11z"/>
+        </svg>
+        ${sourceBadge}
+      </div>
+
+      <p class="font-display text-lg text-graphite leading-relaxed mb-6 italic">${escapeHtml(r.text)}</p>
+
+      <div class="flex items-center gap-3 pt-5 border-t border-primary-900/10">
+        <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center font-medium text-primary-700 text-sm flex-shrink-0">${initial}</div>
+        <div class="min-w-0">
+          <div class="font-medium text-graphite text-sm truncate">${escapeHtml(r.authorName)}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }

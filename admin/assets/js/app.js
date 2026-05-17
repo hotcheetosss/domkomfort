@@ -128,6 +128,10 @@ async function showSection(section) {
       leadsModule.renderLeadsList(container, currentUser);
       break;
     case 'users':      renderPlaceholder(container, 'Сотрудники', 'Скоро — управление доступами.'); break;
+    case 'reviews':
+      const reviewsModule = await import('./reviews.js');
+      reviewsModule.renderReviewsList(container, currentUser);
+      break;
   }
 }
 

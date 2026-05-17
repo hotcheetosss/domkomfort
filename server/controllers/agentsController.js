@@ -4,7 +4,16 @@ exports.list = async (req, res, next) => {
   try {
     const [leadership, agents] = await Promise.all([
       prisma.leadership.findMany({ orderBy: { sortOrder: 'asc' } }),
-      prisma.agent.findMany({ orderBy: { name: 'asc' } }),
+      prisma.agent.findMany({
+        orderBy: { name: 'asc' },
+        include: {
+          reviews: {
+            where: { visible: true },
+            orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
+            select: { id: true, authorName: true, text: true, source: true },
+          },
+        },
+      }),
     ]);
     res.json({ leadership, agents });
   } catch (err) {

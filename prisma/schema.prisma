@@ -43,6 +43,7 @@ model Agent {
 
   // Связи
   properties      Property[]                          // один агент — много объектов
+  reviews        Review[]
   leads           Lead[]                              // один агент — много заявок
 
   @@map("agents")                                    // имя таблицы в БД
@@ -161,4 +162,17 @@ model ResidentialComplex {
 
   @@unique([name, developerId])
   @@map("residential_complexes")
+}
+model Review {
+  id          Int      @id @default(autoincrement())
+  agentId     String
+  agent       Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  authorName  String
+  text        String
+  source      String?
+  visible     Boolean  @default(true)
+  sortOrder   Int      @default(100)
+  createdAt   DateTime @default(now())
+
+  @@index([agentId])
 }

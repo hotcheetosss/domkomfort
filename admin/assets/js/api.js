@@ -191,7 +191,19 @@ export const api = {
     }),
     remove: (id) => request(`${API}/admin/complexes/${id}`, { method: 'DELETE' }),
   },
+
+  reviews: {
+    list:   (agentId) => {
+      const qs = agentId ? '?agentId=' + encodeURIComponent(agentId) : '';
+      return request(`${API}/admin/reviews${qs}`);
+    },
+    get:    (id) => request(`${API}/admin/reviews/${id}`),
+    create: (data) => request(`${API}/admin/reviews`, { method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) => request(`${API}/admin/reviews/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    remove: (id) => request(`${API}/admin/reviews/${id}`, { method: 'DELETE' }),
+  },
 };
+
 
 
 export { getToken, setToken, clearToken };

@@ -58,6 +58,7 @@ app.use('/api/leads', leadsRouter);
 app.use('/admin', express.static(path.join(__dirname, '../admin')));
 app.use(express.static(path.join(__dirname, '../client')));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/api/admin/reviews', require('./routes/adminReviews'));
 
 // SPA fallback для админки: /admin/* (кроме статических файлов) → admin/index.html
 app.get(/^\/admin(\/.*)?$/, (req, res) => {
