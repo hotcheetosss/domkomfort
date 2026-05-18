@@ -31,9 +31,13 @@ async function request(url, options = {}) {
     throw new Error('Требуется повторный вход');
   }
 
-  if (!res.ok) {
+   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: 'Ошибка сервера' }));
-    throw new Error(err.error || `HTTP ${res.status}`);
+    const error = new Error(err.error || `HTTP ${res.status}`);
+    error.status = res.status;
+    error.code = err.code;
+    error.payload = err;
+    throw error;
   }
   return res.json();
 }

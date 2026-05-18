@@ -857,6 +857,25 @@ async function handleSubmit(onClose) {
     }
     handleClose(onClose);
   } catch (err) {
+    // Сервер нашёл дубли — показываем модалку выбора
+    if (err.status === 409 && err.code === 'duplicates_found') {
+      showDuplicatesModal(err.payload.duplicates, async () => {
+        // "Создать всё равно" — повторяем create с флагом force
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Сохранение...';
+        try {
+          const created = await api.properties.create({ ...data, force: true });
+          handleClose(onClose);
+          setTimeout(() => openPropertyForm(currentUser, created.id, onClose), 100);
+        } catch (err2) {
+          showError(err2.message);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Создать объект';
+        }
+      });
+      return;
+    }
     showError(err.message);
   } finally {
     submitBtn.disabled = false;
@@ -868,6 +887,60 @@ function showError(msg) {
   const errBox = document.getElementById('form-error');
   errBox.textContent = msg;
   errBox.classList.remove('hidden');
+}
+
+function showDuplicatesModal(duplicates, onConfirm) {
+  document.getElementById('duplicates-modal')?.remove();
+
+  const list = duplicates.map(d => {
+    const agentName = d.agent?.name ? esc(d.agent.name) : '—';
+    const floorText = d.floor ? `${d.floor} этаж` : 'этаж не указан';
+    return `
+      <div class="border border-gray-200 rounded-lg p-3 bg-gray-50">
+        <div class="font-medium text-graphite text-sm">${esc(d.title || 'Без названия')}</div>
+        <div class="text-xs text-graphite/60 mt-1">
+          ${esc(d.address)} · ${floorText} · ${d.sqm} м² · ${esc(d.price || '')} ₸
+        </div>
+        <div class="text-xs text-graphite/50 mt-1">Агент: ${agentName}</div>
+      </div>
+    `;
+  }).join('');
+
+  const overlay = document.createElement('div');
+  overlay.id = 'duplicates-modal';
+  overlay.className = 'fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4';
+  overlay.innerHTML = `
+    <div class="bg-white w-full max-w-lg rounded-xl shadow-2xl overflow-hidden">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-graphite">⚠️ Возможно, эти объекты уже добавлены</h3>
+        <p class="text-sm text-graphite/60 mt-1">
+          Нашли ${duplicates.length} ${duplicates.length === 1 ? 'похожий объект' : 'похожих объекта'} с таким же адресом, этажом и площадью.
+        </p>
+      </div>
+      <div class="px-6 py-4 space-y-2 max-h-80 overflow-y-auto">
+        ${list}
+      </div>
+      <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-3">
+        <button type="button" id="dup-cancel" class="px-5 py-2.5 text-graphite hover:bg-gray-100 rounded-lg transition">
+          Отмена
+        </button>
+        <button type="button" id="dup-confirm" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition">
+          Создать всё равно
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.remove();
+  });
+  document.getElementById('dup-cancel').addEventListener('click', () => overlay.remove());
+  document.getElementById('dup-confirm').addEventListener('click', () => {
+    overlay.remove();
+    onConfirm();
+  });
 }
 
 function handleClose(onClose) {

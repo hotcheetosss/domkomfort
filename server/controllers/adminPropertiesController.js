@@ -70,6 +70,39 @@ function validatePropertyInput(data, { isNew } = { isNew: false }) {
   return errors;
 }
 
+// Поиск похожих объектов (защита от дублей).
+// Совпадение: адрес (без учёта регистра и пробелов по краям)
+//           + этаж (точное совпадение или оба null)
+//           + площадь (±0.5 м²)
+// Ищем по всему агентству (включая неактивные).
+async function findSimilarProperties({ address, floor, sqm }) {
+  if (!address || sqm === undefined || sqm === null) return [];
+  const addr = String(address).trim();
+  if (!addr) return [];
+
+  const sqmNum = parseFloat(sqm);
+  if (isNaN(sqmNum)) return [];
+
+  const floorNum = (floor === '' || floor === null || floor === undefined) ? null : parseInt(floor, 10);
+
+  const candidates = await prisma.property.findMany({
+    where: {
+      address: { equals: addr, mode: 'insensitive' },
+      sqm: { gte: sqmNum - 0.5, lte: sqmNum + 0.5 },
+      ...(floorNum === null
+        ? { floor: null }
+        : { floor: floorNum }),
+    },
+    include: {
+      agent: { select: { id: true, name: true, phone: true } },
+    },
+    orderBy: { createdAt: 'desc' },
+    take: 5,
+  });
+
+  return candidates.map(serialize);
+}
+
 // Проверяет что user имеет право трогать этот объект.
 // admin — всё; agent — только свои (его user.id в agent.userId).
 async function canEditProperty(user, property) {
@@ -154,6 +187,22 @@ exports.create = async (req, res, next) => {
 
     const price = parsePrice(req.body.price);
     if (!price) return res.status(400).json({ error: 'Некорректная цена' });
+
+    // Проверка дублей. Если клиент уже подтвердил создание (force=true) — пропускаем.
+    if (req.body.force !== true) {
+      const duplicates = await findSimilarProperties({
+        address: req.body.address,
+        floor:   req.body.floor,
+        sqm:     req.body.sqm,
+      });
+      if (duplicates.length > 0) {
+        return res.status(409).json({
+          code: 'duplicates_found',
+          error: 'Найдены похожие объекты',
+          duplicates,
+        });
+      }
+    }
 
     // Агент может создавать только от своего имени
     let agentId = req.body.agentId;
