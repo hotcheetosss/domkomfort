@@ -102,8 +102,27 @@ function setupNavigation() {
       e.preventDefault();
       const section = item.dataset.section;
       showSection(section);
+      closeSidebar();  // на мобилке скрываем меню после выбора пункта
     });
   });
+
+  // Мобильный бургер
+  const toggle  = document.getElementById('sidebar-toggle');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (toggle)  toggle.addEventListener('click', openSidebar);
+  if (overlay) overlay.addEventListener('click', closeSidebar);
+}
+
+function openSidebar() {
+  document.getElementById('sidebar')?.classList.remove('-translate-x-full');
+  document.getElementById('sidebar-overlay')?.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar')?.classList.add('-translate-x-full');
+  document.getElementById('sidebar-overlay')?.classList.add('hidden');
+  document.body.style.overflow = '';
 }
 
 async function showSection(section) {

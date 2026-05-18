@@ -15,20 +15,21 @@ export async function renderPropertiesList(container, user) {
   currentUser = user;
 
   container.innerHTML = `
-    <div class="flex items-center justify-between mb-6">
-      <div>
-        <h1 class="text-3xl font-semibold text-graphite mb-2">Объекты</h1>
-        <p class="text-graphite/60">${user.role === 'admin' ? 'Все объекты агентства' : 'Ваши объекты'}</p>
+    <div class="flex items-start justify-between gap-3 mb-6">
+      <div class="min-w-0">
+        <h1 class="text-2xl sm:text-3xl font-semibold text-graphite mb-1 sm:mb-2">Объекты</h1>
+        <p class="text-sm sm:text-base text-graphite/60">${user.role === 'admin' ? 'Все объекты агентства' : 'Ваши объекты'}</p>
       </div>
-      <button onclick="window.openPropertyForm()" class="px-5 py-2.5 bg-primary-700 hover:bg-primary-800 text-white font-medium rounded-lg transition flex items-center gap-2">
+      <button onclick="window.openPropertyForm()" class="flex-shrink-0 px-3 sm:px-5 py-2.5 bg-primary-700 hover:bg-primary-800 text-white font-medium rounded-lg transition flex items-center gap-2 text-sm sm:text-base">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Добавить объект
+        <span class="hidden sm:inline">Добавить объект</span>
+        <span class="sm:hidden">Добавить</span>
       </button>
     </div>
 
     <!-- Filters -->
-    <div class="admin-card mb-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="admin-card mb-6 p-4 sm:p-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div class="lg:col-span-2">
           <label class="text-xs uppercase tracking-wider text-graphite/50 font-medium mb-1.5 block">Поиск</label>
           <div class="relative">
@@ -56,8 +57,8 @@ export async function renderPropertiesList(container, user) {
         </div>
       </div>
 
-      <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
-        <div class="flex items-center gap-2 text-sm">
+      <div class="flex flex-wrap items-center justify-between gap-3 mt-4 pt-4 border-t border-gray-100">
+        <div class="flex items-center gap-2 text-sm flex-wrap">
           <button data-active="" class="status-chip active">Все</button>
           <button data-active="true" class="status-chip">Активные</button>
           <button data-active="false" class="status-chip">Скрытые</button>
@@ -140,7 +141,8 @@ function renderTable() {
   }
 
   wrap.innerHTML = `
-    <div class="overflow-x-auto">
+    <!-- Таблица — только на десктопе (≥ 640px) -->
+    <div class="hidden sm:block overflow-x-auto">
       <table class="w-full">
         <thead class="bg-gray-50 border-b border-gray-200">
           <tr>
@@ -157,6 +159,12 @@ function renderTable() {
         </tbody>
       </table>
     </div>
+
+    <!-- Карточки — только на мобилке (< 640px) -->
+    <div class="sm:hidden divide-y divide-gray-100">
+      ${allItems.map(p => cardHTML(p)).join('')}
+    </div>
+
     <div class="p-4 border-t border-gray-100 text-sm text-graphite/60">
       Всего: <span class="font-medium text-graphite">${allItems.length}</span>
     </div>
@@ -221,6 +229,62 @@ function rowHTML(p) {
         </div>
       </td>
     </tr>
+  `;
+}
+
+function cardHTML(p) {
+  const thumb = p.gallery && p.gallery[0]
+    ? `<img src="${p.gallery[0]}" class="w-20 h-20 rounded-lg object-cover flex-shrink-0" />`
+    : `<div class="w-20 h-20 rounded-lg bg-gray-100 flex items-center justify-center text-graphite/30 text-[10px] flex-shrink-0">нет фото</div>`;
+
+  const dealBadge = p.deal === 'rent'
+    ? `<span class="inline-block px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded">Аренда</span>`
+    : `<span class="inline-block px-2 py-0.5 bg-primary-50 text-primary-700 text-xs rounded">Продажа</span>`;
+
+  const statusBadge = p.active
+    ? `<span class="inline-flex items-center gap-1.5 text-xs text-primary-700"><span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span>Активен</span>`
+    : `<span class="inline-flex items-center gap-1.5 text-xs text-graphite/50"><span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>Скрыт</span>`;
+
+  const canDelete = currentUser.role === 'admin'
+    || (currentUser.agent && p.agent && currentUser.agent.id === p.agent.id);
+
+  return `
+    <div class="p-4 hover:bg-gray-50/50 transition">
+      <div class="flex gap-3">
+        ${thumb}
+        <div class="flex-1 min-w-0">
+          <div class="font-medium text-graphite text-sm leading-tight">${p.title}</div>
+          <div class="text-xs text-graphite/60 mt-1">${p.type} · ${p.district}</div>
+          <div class="text-xs text-graphite/60 mt-0.5">${p.sqm} м²${p.rooms ? ` · ${p.rooms}-комн.` : ''}${p.top ? ` · TOP` : ''}</div>
+          <div class="font-semibold text-graphite text-sm mt-1.5">${p.price} ₸${p.deal === 'rent' ? '/мес' : ''}</div>
+          <div class="flex items-center gap-2 mt-2 flex-wrap">
+            ${dealBadge}
+            ${statusBadge}
+          </div>
+        </div>
+      </div>
+
+      ${p.agent ? `
+        <div class="mt-3 pt-3 border-t border-gray-100 text-xs text-graphite/60">
+          Агент: <span class="text-graphite">${p.agent.name}</span> · ${p.agent.phone}
+        </div>` : ''}
+
+      <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-end gap-1">
+        <button onclick="window.openPropertyForm('${p.id}')" title="Редактировать" class="p-2.5 hover:bg-gray-100 rounded-lg transition text-graphite/60 hover:text-primary-700">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <button onclick="window.togglePropertyActive('${p.id}', ${!p.active})" title="${p.active ? 'Скрыть' : 'Опубликовать'}" class="p-2.5 hover:bg-gray-100 rounded-lg transition text-graphite/60 hover:text-graphite">
+          ${p.active
+            ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+            : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
+          }
+        </button>
+        ${canDelete ? `
+          <button onclick="window.deletePropertyConfirm('${p.id}')" title="Удалить" class="p-2.5 hover:bg-red-50 rounded-lg transition text-graphite/60 hover:text-red-600">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          </button>` : ''}
+      </div>
+    </div>
   `;
 }
 

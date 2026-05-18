@@ -35,6 +35,43 @@ body[data-role="agent"] .admin-only {
   display: none;
 }
 
+/* Status chip (Все / Активные / Скрытые) */
+.status-chip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgb(107, 114, 128);
+  background: transparent;
+  border: 1px solid rgb(229, 231, 235);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+.status-chip:hover {
+  background: rgb(249, 250, 251);
+}
+.status-chip.active {
+  background: rgb(33, 97, 64);
+  color: #fff;
+  border-color: rgb(33, 97, 64);
+}
+
+/* Базовый стиль для admin-input (используется в фильтрах и формах) */
+.admin-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgb(209, 213, 219);
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.admin-input:focus {
+  outline: none;
+  border-color: rgb(33, 97, 64);
+  box-shadow: 0 0 0 3px rgba(33, 97, 64, 0.1);
+}
+
 /* Карточка в content area */
 .admin-card {
   background: #fff;

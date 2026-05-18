@@ -85,10 +85,29 @@
 </div>
 
 <!-- Основная админка (после логина) -->
-<div id="page-app" class="admin-page hidden min-h-screen flex">
+<div id="page-app" class="admin-page hidden min-h-screen md:flex">
+
+  <!-- Мобильный хедер (виден только на < 768px) -->
+  <header class="md:hidden sticky top-0 z-30 bg-primary-900 text-white px-4 py-3 flex items-center justify-between shadow-sm">
+    <button id="sidebar-toggle" class="p-2 -ml-2 rounded-lg hover:bg-primary-800 transition" aria-label="Меню">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="flex items-center gap-2">
+      <svg class="w-6 h-6" viewBox="0 0 60 60" fill="none">
+        <path d="M18 45 L18 25 L30 15 L30 45 Z" stroke="#7BBF9E" stroke-width="2.5" fill="none"/>
+        <path d="M30 45 L30 22 L42 30 L42 45 Z" stroke="#7BBF9E" stroke-width="2.5" fill="none"/>
+        <path d="M14 45 L18 45 L18 32 Z" fill="#7BBF9E"/>
+      </svg>
+      <span class="font-semibold text-sm">Дом Комфорт</span>
+    </div>
+    <div class="w-8"></div>
+  </header>
+
+  <!-- Overlay для закрытия sidebar по клику вне (виден только когда sidebar открыт) -->
+  <div id="sidebar-overlay" class="md:hidden hidden fixed inset-0 bg-black/50 z-40"></div>
 
   <!-- Sidebar -->
-  <aside class="w-64 bg-primary-900 text-white flex-shrink-0 flex flex-col">
+  <aside id="sidebar" class="w-64 bg-primary-900 text-white flex-shrink-0 flex flex-col fixed md:static inset-y-0 left-0 z-50 -translate-x-full md:translate-x-0 transition-transform duration-200">
     <div class="p-6 border-b border-primary-800">
       <div class="flex items-center gap-3">
         <svg class="w-8 h-8" viewBox="0 0 60 60" fill="none">
@@ -150,9 +169,9 @@
     </div>
   </aside>
 
-  <!-- Main content area -->
-  <main class="flex-1 overflow-auto">
-    <div id="admin-content" class="p-8"></div>
+<!-- Main content area -->
+  <main class="flex-1 overflow-auto md:min-h-screen">
+    <div id="admin-content" class="p-4 sm:p-6 md:p-8"></div>
   </main>
 </div>
 
